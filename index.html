@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAINS – Fitness Tracker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#2a2a2a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px}
+.container{max-width:600px;margin:0 auto}
+h1{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;text-transform:uppercase}
+.subtitle{font-size:10px;letter-spacing:3px;color:#888;text-transform:uppercase;margin-top:2px}
+.phase-info{font-size:12px;color:#aaa;margin-top:4px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.stat-card{border:1.5px solid #555;padding:14px;background:#333}
+.stat-label{font-size:10px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.stat-value{font-size:22px;font-weight:800;color:#fff}
+.stat-value.green{color:#fff}
+select,input[type=number]{width:100%;padding:9px 10px;background:#333;border:1.5px solid #555;color:#f0f0f0;font-size:13px;cursor:pointer;margin-bottom:0;border-radius:0;appearance:none;-webkit-appearance:none}
+label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px}
+.day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px}
+.day-btn{padding:9px 6px;background:#333;border:1.5px solid #555;color:#aaa;font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
+.day-btn.active{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
+.card{border:1.5px solid #555;padding:18px;margin-bottom:16px;background:#333}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#fff}
+
+/* Exercise items */
+.ex-item{border:1.5px solid #444;border-bottom:none;overflow:hidden;cursor:pointer;transition:border-color .15s;background:#2e2e2e}
+.ex-item:last-child{border-bottom:1.5px solid #444}
+.ex-item.done{background:#303030}
+.ex-item:hover{border-color:#888}
+.ex-item:last-child:hover{border-bottom-color:#888}
+.ex-row{display:flex;align-items:center;gap:10px;padding:11px 12px}
+.chk{width:18px;height:18px;border:1.5px solid #aaa;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:900;transition:all .15s}
+.ex-item.done .chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
+.ex-info{flex:1}
+.ex-name{font-size:13px;font-weight:600;color:#f0f0f0}
+.ex-item.done .ex-name{text-decoration:line-through;color:#666}
+.ex-meta{font-size:11px;color:#888;margin-top:1px}
+.ex-arrow{font-size:10px;color:#666;transition:transform .15s}
+.ex-item.open .ex-arrow{transform:rotate(90deg)}
+
+/* Demo panel */
+.demo-panel{display:none;border-top:1.5px solid #444;padding:14px;background:#272727}
+.ex-item.open .demo-panel{display:block}
+.demo-muscles{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.muscle-tag{padding:3px 8px;font-size:10px;font-weight:700;background:#f0f0f0;color:#1a1a1a;text-transform:uppercase;letter-spacing:.5px}
+.demo-steps{margin-bottom:12px}
+.demo-step{display:flex;gap:10px;margin-bottom:7px;font-size:12px;line-height:1.5;color:#ccc}
+.step-num{width:18px;height:18px;background:#f0f0f0;color:#1a1a1a;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.demo-tip{border-left:3px solid #f0f0f0;padding:8px 12px;font-size:12px;color:#ccc;margin-bottom:12px;background:#303030}
+.demo-tip strong{display:block;margin-bottom:2px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#fff}
+.watch-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f0f0f0;border:none;color:#1a1a1a;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;text-transform:uppercase;letter-spacing:.5px}
+
+/* Weight log */
+.weight-input-row{display:flex;gap:8px;margin-bottom:12px}
+.weight-input-row input{flex:1;margin-bottom:0}
+.btn{background:#f0f0f0;border:1.5px solid #f0f0f0;color:#1a1a1a;padding:8px 14px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.btn.green{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
+.weight-entry{display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #444;font-size:13px;color:#f0f0f0}
+.weight-entry:last-child{border-bottom:none}
+.empty{text-align:center;padding:20px;color:#666;font-size:12px}
+
+/* Goals */
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.goal-card{padding:12px;border:1.5px solid #555;background:#2e2e2e}
+.goal-fat{}
+.goal-muscle{}
+.goal-lbl{font-size:10px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.goal-val{font-size:14px;font-weight:800;margin-bottom:4px;color:#fff}
+.goal-sub{font-size:11px;color:#aaa}
+
+/* Progress bar */
+.prog-bar-wrap{height:4px;background:#444;margin-top:8px;overflow:hidden}
+.prog-bar{height:100%;background:#f0f0f0;transition:width .5s}
+
+/* Tab nav */
+.tabs{display:flex;gap:0;margin-bottom:20px;border:1.5px solid #555}
+.tab{flex:1;padding:10px;background:#333;border:none;border-right:1.5px solid #555;color:#888;font-size:11px;font-weight:700;cursor:pointer;text-align:center;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
+.tab:last-child{border-right:none}
+.tab.active{background:#f0f0f0;color:#1a1a1a}
+
+.section{display:none}
+.section.active{display:block}
+header{margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #555}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>GAINS</h1>
+    <div class="subtitle">Fitness Tracker</div>
+    <div class="phase-info">Phase <span id="hPhase">1</span> · Week <span id="hWeek">1-2</span></div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(event,'workout')">Workout</div>
+    <div class="tab" onclick="switchTab(event,'weight')">Weight</div>
+    <div class="tab" onclick="switchTab(event,'progress')">Progress</div>
+  </div>
+
+  <!-- ===== WORKOUT TAB ===== -->
+  <div id="tab-workout" class="section active">
+
+    <!-- Stats -->
+    <div class="grid-2">
+      <div class="stat-card">
+        <div class="stat-label">Weight Lost</div>
+        <div class="stat-value green" id="statLost">0 lbs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Today Done</div>
+        <div class="stat-value" id="statDone">0/0</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div>
+        <label class="lbl">Phase</label>
+        <select id="selPhase" onchange="onPhaseChange()">
+          <option value="1">Phase 1 (Wks 1–4)</option>
+          <option value="2">Phase 2 (Wks 5–8)</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl">Week</label>
+        <select id="selWeek">
+          <option value="1">Week 1–2</option>
+          <option value="3">Week 3–4</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Day buttons -->
+    <div class="day-grid" id="dayGrid"></div>
+
+    <!-- Exercise list -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" id="dayTitle">Monday's Workout</div>
+      </div>
+      <div id="exList"></div>
+    </div>
+  </div>
+
+  <!-- ===== WEIGHT TAB ===== -->
+  <div id="tab-weight" class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Log Weight</div>
+      </div>
+      <div class="weight-input-row">
+        <input type="number" id="wtInput" placeholder="Enter weight (lbs)" step="0.1">
+        <button class="btn green" onclick="addWeight()">Save</button>
+      </div>
+      <div id="wtList"><div class="empty">No entries yet — log your starting weight (160 lbs) to begin tracking!</div></div>
+    </div>
+  </div>
+
+  <!-- ===== PROGRESS TAB ===== -->
+  <div id="tab-progress" class="section">
+    <div class="stat-card" style="margin-bottom:16px">
+      <div class="stat-label">Starting Weight</div>
+      <div class="stat-value">160 lbs</div>
+    </div>
+    <div class="stat-card" style="margin-bottom:16px">
+      <div class="stat-label">Current Weight</div>
+      <div class="stat-value green" id="progCurrent">160 lbs</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px">8-Week Goals</div>
+      <div class="goal-grid">
+        <div class="goal-card goal-fat">
+          <div class="goal-lbl">Fat Loss</div>
+          <div class="goal-val">–10 lbs</div>
+          <div class="goal-sub">Lost: <span id="goalLost">0</span> lbs</div>
+          <div class="prog-bar-wrap"><div class="prog-bar" id="goalBar" style="width:0%"></div></div>
+        </div>
+        <div class="goal-card goal-muscle">
+          <div class="goal-lbl">Muscle</div>
+          <div class="goal-val">Build &amp; Define</div>
+          <div class="goal-sub">8 weeks progressive</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="progHistory">
+      <div class="card-title" style="margin-bottom:12px">Weight History</div>
+      <div id="histList"><div class="empty">No entries yet</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:4px">Backup &amp; Restore</div>
+      <div style="font-size:11px;color:#888;margin-bottom:14px">Export your data to Notes or Messages. Paste it back any time to restore.</div>
+      <button class="btn" style="width:100%;margin-bottom:8px" onclick="exportData()">Export — Copy Backup</button>
+      <textarea id="importBox" placeholder="Paste backup here to restore..." style="width:100%;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:12px;padding:10px;resize:vertical;min-height:70px;font-family:monospace;margin-bottom:8px"></textarea>
+      <button class="btn" style="width:100%;background:#555;border-color:#555;color:#f0f0f0" onclick="importData()">Restore from Backup</button>
+      <div id="backupMsg" style="font-size:11px;text-align:center;margin-top:8px;min-height:16px;color:#aaa"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const START_WT = 160;
+let phase = 1, weekKey = 1, selDay = DAYS[new Date().getDay()===0?6:new Date().getDay()-1];
+let log = {}, weights = [];
+
+/* ── Exercise database with full demos ── */
+const DEMOS = {
+  'Push-Up (elevated)':{
+    muscles:['Chest','Triceps','Front Delts','Core'],
+    steps:['Place push-up handles slightly wider than shoulder-width on the floor.','Elevate your feet on a couch, bed, or chair (12–18 inches).','Keep body in a straight line — hips level, core braced.','Lower chest to handles with elbows at ~45° from torso.','Push explosively back to start. Squeeze chest at top.'],
+    tip:'The higher your feet, the more upper chest activation. Start low if it\'s tough.',
+    yt:'incline+push+up+feet+elevated+form'
+  },
+  'Banded Chest Press':{
+    muscles:['Chest','Triceps','Front Delts'],
+    steps:['Loop band behind back at mid-scapula level, hold ends in each hand.','Stand with feet shoulder-width apart, slight forward lean.','Start with hands at chest height, elbows bent ~90°.','Press forward and slightly inward until arms are fully extended.','Return slowly (2–3 seconds) to start position.'],
+    tip:'Keep band path straight — don\'t let elbows flare above shoulder line.',
+    yt:'resistance+band+chest+press+standing+form'
+  },
+  'Banded Shoulder Press':{
+    muscles:['Front Delts','Side Delts','Triceps'],
+    steps:['Stand on band with feet hip-width, hold ends at shoulder height.','Palms face forward, elbows at ~90°.','Press straight overhead until arms are fully extended.','Don\'t let back arch — keep ribs down, core tight.','Lower slowly back to shoulder height.'],
+    tip:'Press to full lockout — that top range builds most delt strength.',
+    yt:'resistance+band+overhead+shoulder+press+form'
+  },
+  'Banded Lateral Raise':{
+    muscles:['Side Delts','Traps (lower)'],
+    steps:['Stand on band, hold one end in each hand by your sides.','Slight bend in elbows — keep this fixed throughout.','Raise arms out to sides in a wide arc until hands reach shoulder height.','Pause 1 second at top, then lower over 3 seconds.','Lead with elbows, not wrists.'],
+    tip:'Use a lighter band than you think — form breaks quickly with too much resistance.',
+    yt:'resistance+band+lateral+raise+form'
+  },
+  'Tricep Dips':{
+    muscles:['Triceps','Chest (lower)','Front Delts'],
+    steps:['Place hands on the edge of a sturdy chair or bench, fingers pointing forward.','Feet flat on floor, knees at 90° (easier) or legs extended (harder).','Lower body by bending elbows until upper arms are parallel to floor.','Keep elbows pointing back — not flaring to the sides.','Press back up to start, squeeze triceps at top.'],
+    tip:'To add weight: place a backpack with books across your lap.',
+    yt:'tricep+dips+chair+form+tutorial'
+  },
+  'Banded Rows':{
+    muscles:['Lats','Rhomboids','Rear Delts','Biceps'],
+    steps:['Anchor band at chest height (door anchor or sturdy post).','Hold ends, step back until band has tension, hinge slightly forward.','Pull elbows back past your torso — think "elbows to back pockets".','Squeeze shoulder blades together hard at peak contraction.','Extend arms fully on the way out — full range of motion.'],
+    tip:'Pause 1 second at the contracted position for max muscle activation.',
+    yt:'resistance+band+row+back+exercise+form'
+  },
+  'Push-Up to Down-Dog':{
+    muscles:['Chest','Shoulders','Triceps','Hamstrings','Lats'],
+    steps:['Start in push-up position, hands on handles if using them.','Perform one full push-up — lower chest, press back up.','At the top, push hips up and back into Downward Dog position.','Press heels toward floor, lengthen spine.','Return to push-up position and repeat.'],
+    tip:'This is both a strength AND mobility exercise. Don\'t rush the Down Dog portion.',
+    yt:'push+up+downward+dog+combination+form'
+  },
+  'Banded Face Pulls':{
+    muscles:['Rear Delts','Rotator Cuff','Mid Traps','Rhomboids'],
+    steps:['Anchor band at face/eye height.','Hold ends with both hands, palms facing down.','Pull toward your face, hands ending beside ears.','Lead with elbows high and wide — not low.','External rotate at the end so knuckles point to ceiling.'],
+    tip:'This is THE most important shoulder health exercise. Never skip it — prevents injury.',
+    yt:'resistance+band+face+pull+rear+delt+form'
+  },
+  'Banded Bicep Curls':{
+    muscles:['Biceps','Brachialis','Forearms'],
+    steps:['Stand on band, feet hip-width apart.','Hold band ends, arms fully extended by sides, palms facing forward.','Curl hands toward shoulders by bending at elbows only.','Keep elbows pinned to your sides — they should not move forward.','Lower over 2–3 seconds for maximum tension.'],
+    tip:'Supinate (rotate) your wrists slightly outward as you curl for peak bicep contraction.',
+    yt:'resistance+band+bicep+curl+standing+form'
+  },
+  'Banded Pull-Aparts':{
+    muscles:['Rear Delts','Mid Traps','Rhomboids'],
+    steps:['Hold band with both hands in front of you at chest height, arms straight.','Grip slightly wider than shoulder width.','Pull band apart by moving hands outward until band touches your chest.','Squeeze shoulder blades together firmly at the end position.','Return slowly — 3 seconds back to start.'],
+    tip:'Keep arms parallel to floor the entire time. Don\'t let them drop down.',
+    yt:'resistance+band+pull+apart+shoulder+form'
+  },
+  'Banded Squats':{
+    muscles:['Quads','Glutes','Hamstrings','Core'],
+    steps:['Loop band over shoulders or hold under feet, stand feet shoulder-width.','Toes angled out 15–30°, chest tall, core braced.','Push knees out in line with toes as you descend.','Lower until thighs are parallel (or below) to floor.','Drive through full foot to stand — squeeze glutes at top.'],
+    tip:'If heels rise, widen stance slightly or point toes out more.',
+    yt:'resistance+band+squat+form+tutorial'
+  },
+  'Banded Romanian Deadlifts':{
+    muscles:['Hamstrings','Glutes','Lower Back','Core'],
+    steps:['Stand on band, hold ends at hip level, feet hip-width apart.','Soft bend in knees — keep this angle throughout movement.','Hinge at hips by pushing them back (not bending at waist).','Lower hands along legs until you feel strong hamstring stretch.','Drive hips forward to return to standing — squeeze glutes at top.'],
+    tip:'The movement starts at the hips, NOT the lower back. Push your hips back first.',
+    yt:'resistance+band+romanian+deadlift+hamstring+form'
+  },
+  'Banded Lateral Walks':{
+    muscles:['Glutes (medius)','Hip Abductors','TFL'],
+    steps:['Place band around ankles or just above knees.','Stand with feet hip-width, slight squat position, chest up.','Step sideways with lead foot — wider than hip-width.','Bring trailing foot to hip-width — don\'t let it snap together.','Keep resistance on the band the entire time. Repeat each direction.'],
+    tip:'Keep your hips level — don\'t tilt side to side as you step.',
+    yt:'banded+lateral+walk+glute+exercise+form'
+  },
+  'Glute Bridges (single leg)':{
+    muscles:['Glutes','Hamstrings','Core'],
+    steps:['Lie on back, knees bent, feet flat on mat, arms by sides.','Lift one leg — either extend it straight or pull it toward chest.','Dig the planted heel into the mat.','Drive hips up until torso and planted thigh form a straight line.','Squeeze glutes hard at top for 1 second. Lower slowly.'],
+    tip:'If hips rotate or drop, your glutes aren\'t firing — slow down and focus.',
+    yt:'single+leg+glute+bridge+form+exercise'
+  },
+  'Dead Bug':{
+    muscles:['Deep Core (TVA)','Lower Back','Hip Flexors'],
+    steps:['Lie on back, arms pointing straight up to ceiling, knees bent 90° above hips.','Press lower back firmly into mat — hold this throughout.','Slowly extend opposite arm (back) and leg (forward) simultaneously.','Stop before lower back lifts off mat.','Return to start and repeat on other side.'],
+    tip:'Go SLOW. The slower you go, the harder your core works. Never let lower back arch.',
+    yt:'dead+bug+exercise+core+form+tutorial'
+  },
+  'Banded Good Mornings':{
+    muscles:['Hamstrings','Glutes','Erector Spinae','Core'],
+    steps:['Stand on band, loop it over your shoulders behind your neck.','Feet shoulder-width, soft bend in knees, chest tall.','Hinge at hips — push them straight back as you fold forward.','Keep back flat (not rounded) throughout movement.','Drive hips forward to return upright. Squeeze glutes at top.'],
+    tip:'Think "chest to wall in front of you" not "head to floor" when hinging.',
+    yt:'resistance+band+good+morning+hip+hinge+form'
+  },
+  'Single-Leg Glute Bridges':{
+    muscles:['Glutes','Hamstrings','Core','Hip Stabilizers'],
+    steps:['Lie on back, knees bent, feet flat on mat.','Lift one leg — extend it straight at same height as planted knee.','Press down through planted heel, drive hips up.','Top position: hip, planted knee, and shoulder form a straight diagonal.','Hold 1–2 seconds at top. Lower slowly. Complete all reps one side first.'],
+    tip:'Add a pause at the top of each rep to maximize glute activation.',
+    yt:'single+leg+glute+bridge+form'
+  },
+  'Cossack Squats':{
+    muscles:['Glutes','Adductors','Quads','Hamstrings','Hips'],
+    steps:['Stand with feet very wide (wider than squat stance).','Toes slightly turned out.','Shift weight to one side, bending that knee deeply while other leg stays straight.','Lower as deep as possible — aiming for thigh parallel or below.','Push back up to center and shift to other side.'],
+    tip:'Mobility exercise too — don\'t rush it. Gradually increase depth week over week.',
+    yt:'cossack+squat+lateral+squat+form+tutorial'
+  },
+  'Plank (on handles)':{
+    muscles:['Core (all)','Shoulders','Chest','Glutes'],
+    steps:['Place push-up handles on floor shoulder-width apart.','Grip handles, extend legs back — body forms a straight line.','Head neutral — eyes looking at floor slightly ahead.','Squeeze abs, glutes, and quads simultaneously.','Breathe steadily — don\'t hold breath. Hold position.'],
+    tip:'The handles allow a more neutral wrist position. Focus on squeezing glutes hard.',
+    yt:'push+up+handle+plank+form+core'
+  },
+  'Dead Bug Series':{
+    muscles:['Core (deep)','Lower Back','Hip Flexors'],
+    steps:['Lie on back. Press lower back to floor. Arms up, knees bent at 90°.','Extend one arm overhead and opposite leg forward — slowly.','Return and switch sides.','Progress: extend arm farther, pause longer, add ankle weight later.','Never let lower back lift — that\'s your form limit.'],
+    tip:'This trains your core to resist movement — more functional than crunches.',
+    yt:'dead+bug+exercise+variations+progression'
+  },
+  'Bicycle Crunches':{
+    muscles:['Obliques','Rectus Abdominis','Hip Flexors'],
+    steps:['Lie on back, hands loosely behind head (don\'t pull neck).','Lift shoulder blades off mat, knees at 90°.','Rotate right elbow toward left knee while extending right leg.','Switch sides in a controlled pedaling motion.','Keep lower back pressed into mat throughout.'],
+    tip:'Slow it down — the rotation should be full and deliberate, not just elbow bouncing.',
+    yt:'bicycle+crunch+proper+form+technique'
+  },
+  'Bulgarian Split Squats':{
+    muscles:['Quads','Glutes','Hamstrings','Core'],
+    steps:['Stand about 2 feet in front of a chair or bench.','Place rear foot on the surface, laces down.','Front foot should be far enough that knee tracks over toes when bent.','Lower rear knee toward floor — torso stays upright.','Drive through front heel to stand. All reps one leg, then switch.'],
+    tip:'The hardest bodyweight leg exercise. Start with just bodyweight before adding a band.',
+    yt:'bulgarian+split+squat+form+tutorial'
+  },
+  'Banded Sumo Deadlifts':{
+    muscles:['Glutes','Adductors','Hamstrings','Lower Back'],
+    steps:['Stand on band, feet wider than shoulder-width, toes out 45°.','Reach down and grip band, keep chest tall, back flat.','Push knees out over toes as you stand — don\'t let them cave.','Drive hips forward to lockout position. Squeeze glutes.','Return slowly with control — don\'t just drop.'],
+    tip:'Wide stance shifts emphasis from hamstrings to glutes and inner thighs.',
+    yt:'resistance+band+sumo+deadlift+form'
+  },
+  'Banded Lat Pulldowns':{
+    muscles:['Lats','Biceps','Mid Traps','Rhomboids'],
+    steps:['Anchor band high above head (door frame top or pull-up bar).','Kneel or sit on mat, reach up and grip band.','Pull elbows down and slightly back toward your hip pockets.','Squeeze lats hard at bottom — elbows should reach ribs.','Extend fully on the way up — full stretch at top.'],
+    tip:'Lean back very slightly and pull to upper chest for maximum lat engagement.',
+    yt:'resistance+band+lat+pulldown+form+kneeling'
+  },
+  'Overhead Tricep Extension':{
+    muscles:['Triceps (long head)','Shoulders'],
+    steps:['Anchor band at low point behind you, or stand on it.','Hold band behind your head with both hands (or one hand).','Start with elbows bent — upper arms pointing up by ears.','Extend elbows to press hands overhead until arms are straight.','Lower slowly — full stretch of tricep at bottom.'],
+    tip:'This hits the long head of the tricep, which makes up most of the muscle mass.',
+    yt:'resistance+band+overhead+tricep+extension+form'
+  },
+  'Hollow Body Hold':{
+    muscles:['Core (deep)','Hip Flexors','Quads'],
+    steps:['Lie on back, arms extended overhead, legs straight.','Press lower back firmly into floor.','Lift arms, legs, and shoulders off the floor simultaneously.','Hold position — body forms a slight "banana" curve.','Start with knees bent if full extension is too hard.'],
+    tip:'If your lower back lifts, raise your legs higher. That\'s the safe range for now.',
+    yt:'hollow+body+hold+core+exercise+form'
+  },
+  'Banded Hamstring Curls':{
+    muscles:['Hamstrings','Calves','Glutes'],
+    steps:['Anchor band at ankle height to sturdy post/door.','Loop band around one ankle, lie face down on mat.','Fully extend leg against band tension (starting position).','Curl leg by bending knee — bring heel toward glutes.','Lower slowly — resist the band on the way down.'],
+    tip:'Point toes slightly outward to target the outer hamstring head more.',
+    yt:'resistance+band+hamstring+curl+lying+form'
+  },
+  'Banded Step-Ups':{
+    muscles:['Quads','Glutes','Hamstrings','Calves'],
+    steps:['Stand facing a sturdy step, box, or sturdy chair (12–18 inches).','Step up with right foot fully planted on surface.','Drive through that heel to lift body up — don\'t push off back foot.','Stand fully upright at top, then lower the trailing leg slowly.','Complete all reps one side, then switch.'],
+    tip:'The slower the lowering phase, the more quad and glute activation.',
+    yt:'step+up+exercise+form+glute+quad'
+  },
+  'Plank with Shoulder Taps':{
+    muscles:['Core','Shoulder Stabilizers','Glutes','Chest'],
+    steps:['Start in high plank (on hands, not elbows) on push-up handles.','Feet slightly wider than normal for stability.','Lift one hand to tap opposite shoulder — keep hips level.','Return hand to floor before tapping the other shoulder.','The anti-rotation challenge is the entire point — resist hip sway.'],
+    tip:'Wider foot stance makes this much easier. Narrow it as you get stronger.',
+    yt:'plank+shoulder+taps+form+anti+rotation+core'
+  },
+  'Pallof Press':{
+    muscles:['Core (anti-rotation)','Obliques','Shoulders'],
+    steps:['Anchor band at chest height to side. Stand perpendicular to anchor.','Hold band at chest with both hands.','Press straight out in front of you until arms are fully extended.','Hold for 1–2 seconds — resist the band pulling you sideways.','Pull back to chest. Complete all reps, then switch sides.'],
+    tip:'The further you step from the anchor, the harder it is. Start close.',
+    yt:'pallof+press+anti+rotation+core+form'
+  },
+  'Stationary Bike':{
+    muscles:['Quads','Hamstrings','Glutes','Cardiovascular'],
+    steps:['Set seat height so knee has slight bend at bottom of pedal stroke.','Grip handlebars lightly — don\'t lean on them.','Keep cadence steady — aim for 70–90 RPM for steady-state.','Breathe rhythmically and maintain conversational pace.','For intervals: alternate hard pushes with easy recovery.'],
+    tip:'Steady state = can hold a conversation. Intervals = breathing too hard to speak.',
+    yt:'stationary+bike+proper+form+posture'
+  },
+  'Yoga/Stretching':{
+    muscles:['Full Body','Hip Flexors','Hamstrings','Shoulders'],
+    steps:['Start with 5 deep breaths — inhale 4 counts, exhale 6 counts.','Hip flexor stretch: lunge position, back knee on mat, lean forward.','Hamstring stretch: seated, legs extended, reach for toes.','Shoulder stretch: cross one arm over chest, hold 20 seconds.','Spinal twist: lie on back, knees to one side, arms out wide.'],
+    tip:'Hold each stretch 20–30 seconds. Don\'t force range — breathe into it.',
+    yt:'full+body+stretching+routine+flexibility'
+  },
+  'Rest Day':{
+    muscles:['Full Body Recovery'],
+    steps:['Take the day off from structured exercise.','Light walking (20–30 min) is encouraged.','Foam rolling or gentle yoga optional.','Eat well and prioritize protein.','Sleep 7–9 hours — this is when muscle is built.'],
+    tip:'Recovery IS part of training. Skipping rest days leads to overtraining and injury.',
+    yt:'active+recovery+day+fitness'
+  }
+};
+
+/* Workout plan data */
+const PLAN = {
+  1:{
+    Monday:[
+      {n:'Push-Up (elevated)',s:3,r:'8–12 reps'},
+      {n:'Banded Chest Press',s:3,r:'12–15 reps'},
+      {n:'Banded Shoulder Press',s:3,r:'10–12 reps'},
+      {n:'Banded Lateral Raise',s:2,r:'12–15 reps'},
+      {n:'Tricep Dips',s:2,r:'8–10 reps'}
+    ],
+    Tuesday:[
+      {n:'Stationary Bike',s:1,r:'20 min steady'},
+      {n:'Yoga/Stretching',s:1,r:'10 min'}
+    ],
+    Wednesday:[
+      {n:'Banded Squats',s:3,r:'12–15 reps'},
+      {n:'Banded Romanian Deadlifts',s:3,r:'10–12 reps'},
+      {n:'Banded Lateral Walks',s:3,r:'12 steps each way'},
+      {n:'Glute Bridges (single leg)',s:3,r:'8 reps each leg'},
+      {n:'Dead Bug',s:3,r:'10 reps each side'}
+    ],
+    Thursday:[
+      {n:'Banded Rows',s:3,r:'12–15 reps'},
+      {n:'Push-Up to Down-Dog',s:3,r:'8–10 reps'},
+      {n:'Banded Face Pulls',s:3,r:'15 reps'},
+      {n:'Banded Bicep Curls',s:3,r:'12–15 reps'},
+      {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
+    ],
+    Friday:[
+      {n:'Banded Good Mornings',s:3,r:'12–15 reps'},
+      {n:'Single-Leg Glute Bridges',s:3,r:'10 reps each leg'},
+      {n:'Cossack Squats',s:3,r:'8 reps each side'},
+      {n:'Plank (on handles)',s:3,r:'30–45 sec'},
+      {n:'Dead Bug Series',s:3,r:'12 reps'},
+      {n:'Bicycle Crunches',s:2,r:'15 reps'}
+    ],
+    Saturday:[{n:'Stationary Bike',s:1,r:'30 min steady'}],
+    Sunday:[{n:'Rest Day',s:1,r:'Full recovery'}]
+  },
+  2:{
+    Monday:[
+      {n:'Push-Up (elevated)',s:5,r:'8–10 reps (weighted)'},
+      {n:'Banded Chest Press',s:4,r:'12–15 reps'},
+      {n:'Banded Shoulder Press',s:4,r:'8–10 reps'},
+      {n:'Banded Lateral Raise',s:3,r:'12–15 reps'},
+      {n:'Tricep Dips',s:3,r:'12–15 reps (weighted)'}
+    ],
+    Tuesday:[
+      {n:'Stationary Bike',s:1,r:'30 min'},
+      {n:'Yoga/Stretching',s:1,r:'10 min'}
+    ],
+    Wednesday:[
+      {n:'Banded Squats',s:5,r:'6–10 reps (heavy)'},
+      {n:'Banded Romanian Deadlifts',s:4,r:'8–10 reps'},
+      {n:'Banded Step-Ups',s:3,r:'10 reps each leg'},
+      {n:'Banded Hamstring Curls',s:3,r:'12–15 reps'},
+      {n:'Single-Leg Glute Bridges',s:3,r:'10–12 reps each'},
+      {n:'Dead Bug',s:3,r:'15 reps'}
+    ],
+    Thursday:[
+      {n:'Banded Rows',s:4,r:'10–12 reps (heavy)'},
+      {n:'Banded Lat Pulldowns',s:3,r:'12–15 reps'},
+      {n:'Banded Face Pulls',s:3,r:'20 reps'},
+      {n:'Banded Bicep Curls',s:4,r:'10–15 reps'},
+      {n:'Overhead Tricep Extension',s:3,r:'12–15 reps'},
+      {n:'Plank (on handles)',s:3,r:'45–60 sec'}
+    ],
+    Friday:[
+      {n:'Bulgarian Split Squats',s:4,r:'8–10 reps each leg'},
+      {n:'Banded Sumo Deadlifts',s:3,r:'10–12 reps'},
+      {n:'Banded Lateral Walks',s:4,r:'15 steps each'},
+      {n:'Banded Romanian Deadlifts',s:3,r:'12 reps'},
+      {n:'Plank with Shoulder Taps',s:3,r:'40 taps'},
+      {n:'Pallof Press',s:3,r:'12 reps each side'},
+      {n:'Hollow Body Hold',s:3,r:'45–60 sec'}
+    ],
+    Saturday:[{n:'Stationary Bike',s:1,r:'8× (45s hard / 90s easy)'}],
+    Sunday:[{n:'Rest Day',s:1,r:'Full recovery'}]
+  }
+};
+
+/* ── Storage ── */
+function save(){localStorage.setItem('gains_log',JSON.stringify(log));localStorage.setItem('gains_wt',JSON.stringify(weights))}
+function load(){try{const a=localStorage.getItem('gains_log'),b=localStorage.getItem('gains_wt');if(a)log=JSON.parse(a);if(b)weights=JSON.parse(b)}catch(e){}}
+
+/* ── Tabs ── */
+function switchTab(e,t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));e.currentTarget.classList.add('active');document.getElementById('tab-'+t).classList.add('active');if(t==='weight')renderWeights();if(t==='progress')renderProgress()}
+
+/* ── Phase/week ── */
+function onPhaseChange(){
+  phase=parseInt(document.getElementById('selPhase').value);
+  const sel=document.getElementById('selWeek');
+  sel.innerHTML=phase===1?'<option value="1">Week 1–2</option><option value="3">Week 3–4</option>':'<option value="5">Week 5–6</option><option value="7">Week 7–8</option>';
+  weekKey=phase===1?1:5;sel.value=weekKey;render()
+}
+
+/* ── Day buttons ── */
+function renderDays(){
+  const g=document.getElementById('dayGrid');g.innerHTML='';
+  DAYS.forEach(d=>{const b=document.createElement('button');b.className='day-btn'+(d===selDay?' active':'');b.textContent=d.slice(0,3);b.onclick=()=>{selDay=d;render()};g.appendChild(b)})
+}
+
+/* ── Exercises ── */
+function logKey(d,i){return `${phase}_${weekKey}_${d}_${i}`}
+
+function renderExercises(){
+  const exs=(PLAN[phase]||{})[selDay]||[];
+  const done=exs.filter((_,i)=>log[logKey(selDay,i)]).length;
+  document.getElementById('dayTitle').textContent=selDay+"'s Workout";
+  document.getElementById('statDone').textContent=`${done}/${exs.length}`;
+  const el=document.getElementById('exList');
+  if(!exs.length){el.innerHTML='<div class="empty">No workout today</div>';return}
+  el.innerHTML='';
+  exs.forEach((ex,i)=>{
+    const key=logKey(selDay,i),isDone=!!log[key];
+    const dm=DEMOS[ex.n]||{muscles:[],steps:['No demo available.'],tip:'',yt:ex.n.replace(/ /g,'+')};
+    const item=document.createElement('div');
+    item.className='ex-item'+(isDone?' done':'');
+    item.innerHTML=`
+      <div class="ex-row">
+        <div class="chk" onclick="toggle(event,${i})">${isDone?'✓':''}</div>
+        <div class="ex-info" onclick="toggleDemo(this)">
+          <div class="ex-name">${ex.n}</div>
+          <div class="ex-meta">${ex.s} sets × ${ex.r}</div>
+        </div>
+        <div class="ex-arrow" onclick="toggleDemo(this.previousElementSibling)">▶</div>
+      </div>
+      <div class="demo-panel">
+        <div class="demo-muscles">${dm.muscles.map(m=>`<span class="muscle-tag">${m}</span>`).join('')}</div>
+        <div class="demo-steps">${dm.steps.map((s,n)=>`<div class="demo-step"><div class="step-num">${n+1}</div><div>${s}</div></div>`).join('')}</div>
+        ${dm.tip?`<div class="demo-tip"><strong>⚡ Pro Tip</strong>${dm.tip}</div>`:''}
+        <a class="watch-btn" href="https://www.youtube.com/results?search_query=${dm.yt}" target="_blank">▶ Watch Demo on YouTube</a>
+      </div>`;
+    el.appendChild(item)
+  })
+}
+
+function toggle(e,i){e.stopPropagation();const key=logKey(selDay,i);log[key]=!log[key];save();render()}
+function toggleDemo(infoEl){const item=infoEl.closest('.ex-item');item.classList.toggle('open')}
+
+/* ── Weight ── */
+function addWeight(){
+  const v=parseFloat(document.getElementById('wtInput').value);
+  if(!v||v<50||v>500)return;
+  weights.push({date:new Date().toLocaleDateString(),w:v,phase,week:weekKey});
+  document.getElementById('wtInput').value='';save();renderWeights();updateLostStat()
+}
+function renderWeights(){
+  const c=document.getElementById('wtList');
+  if(!weights.length){c.innerHTML='<div class="empty">No entries yet — log your starting weight (160 lbs) to begin!</div>';return}
+  c.innerHTML=[...weights].reverse().map(e=>`<div class="weight-entry"><span>${e.date}</span><span>${e.w} lbs</span></div>`).join('')
+}
+function updateLostStat(){
+  if(!weights.length){document.getElementById('statLost').textContent='0 lbs';return}
+  const l=(START_WT-weights[weights.length-1].w).toFixed(1);
+  document.getElementById('statLost').textContent=(l>=0?'–':'+')+(Math.abs(l))+' lbs'
+}
+
+/* ── Progress ── */
+function renderProgress(){
+  const cur=weights.length?weights[weights.length-1].w:START_WT;
+  const lost=Math.max(0,(START_WT-cur).toFixed(1));
+  const pct=Math.min(100,(lost/10*100)).toFixed(0);
+  document.getElementById('progCurrent').textContent=cur+' lbs';
+  document.getElementById('goalLost').textContent=lost;
+  document.getElementById('goalBar').style.width=pct+'%';
+  const h=document.getElementById('histList');
+  h.innerHTML=weights.length?[...weights].reverse().map(e=>`<div class="weight-entry"><span>${e.date}</span><span>${e.w} lbs</span></div>`).join(''):'<div class="empty">No entries yet</div>'
+}
+
+/* ── Header ── */
+function updateHeader(){
+  document.getElementById('hPhase').textContent=phase;
+  const wkLabels={1:'1–2',3:'3–4',5:'5–6',7:'7–8'};
+  document.getElementById('hWeek').textContent=wkLabels[weekKey]||weekKey
+}
+
+/* ── Main render ── */
+function render(){updateHeader();renderDays();renderExercises();updateLostStat()}
+
+/* ── Backup & Restore ── */
+function exportData(){
+  const backup=JSON.stringify({log,weights,exported:new Date().toLocaleString()});
+  navigator.clipboard.writeText(backup).then(()=>{
+    showMsg('✓ Copied to clipboard — paste into Notes to save','#aaa')
+  }).catch(()=>{
+    const box=document.getElementById('importBox');
+    box.value=backup;box.select();
+    showMsg('✓ Backup shown above — select all and copy it','#aaa')
+  })
+}
+function importData(){
+  const raw=document.getElementById('importBox').value.trim();
+  if(!raw){showMsg('Paste your backup text first','#888');return}
+  try{
+    const d=JSON.parse(raw);
+    if(!d.log&&!d.weights){showMsg('Invalid backup format','#e55');return}
+    if(d.log)log=d.log;
+    if(d.weights)weights=d.weights;
+    save();render();renderWeights();renderProgress();
+    document.getElementById('importBox').value='';
+    showMsg('✓ Data restored successfully','#aaa')
+  }catch(e){showMsg('Could not read backup — check it was copied fully','#e55')}
+}
+function showMsg(txt,color){
+  const el=document.getElementById('backupMsg');
+  el.textContent=txt;el.style.color=color;
+  setTimeout(()=>{el.textContent=''},4000)
+}
+
+/* ── Init ── */
+load();
+document.getElementById('selWeek').addEventListener('change',e=>{weekKey=parseInt(e.target.value);render()});
+render();
+</script>
+</body>
+</html>
