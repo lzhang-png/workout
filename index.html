@@ -12,15 +12,12 @@ h1{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;text-transform:
 .subtitle{font-size:10px;letter-spacing:3px;color:#888;text-transform:uppercase;margin-top:2px}
 .phase-info{font-size:12px;color:#aaa;margin-top:4px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.stat-card{border:1.5px solid #555;padding:14px;background:#333}
+.stat-card{border:1.5px solid #555;padding:14px;background:#333;margin-bottom:20px}
 .stat-label{font-size:10px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
 .stat-value{font-size:22px;font-weight:800;color:#fff}
 .stat-value.green{color:#fff}
-select,input[type=number]{width:100%;padding:9px 10px;background:#333;border:1.5px solid #555;color:#f0f0f0;font-size:13px;cursor:pointer;margin-bottom:0;border-radius:0;appearance:none;-webkit-appearance:none}
+select,input[type=number],input[type=text],textarea{width:100%;padding:9px 10px;background:#333;border:1.5px solid #555;color:#f0f0f0;font-size:16px;cursor:pointer;margin-bottom:0;border-radius:0;appearance:none;-webkit-appearance:none}
 label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px}
-.day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px}
-.day-btn{padding:9px 6px;background:#333;border:1.5px solid #555;color:#aaa;font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
-.day-btn.active{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .card{border:1.5px solid #555;padding:18px;margin-bottom:16px;background:#333}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .card-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#fff}
@@ -58,8 +55,16 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .weight-input-row input{flex:1;margin-bottom:0}
 .btn{background:#f0f0f0;border:1.5px solid #f0f0f0;color:#1a1a1a;padding:8px 14px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
 .btn.green{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
-.weight-entry{display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #444;font-size:13px;color:#f0f0f0}
+.btn.block{width:100%;margin-top:12px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;padding:20px;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.modal-card{width:100%;max-width:600px;background:#333;border:1.5px solid #555;padding:18px;max-height:85vh;overflow-y:auto}
+.modal-close{width:100%;margin-top:12px;background:#555;border-color:#555;color:#f0f0f0}
+.weight-entry{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid #444;font-size:13px;color:#f0f0f0}
 .weight-entry:last-child{border-bottom:none}
+.weight-entry-meta{display:flex;align-items:center;gap:10px}
+.wt-del{background:transparent;border:1.5px solid #666;color:#aaa;width:24px;height:24px;padding:0;cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wt-del:hover{border-color:#888;color:#f0f0f0}
 .empty{text-align:center;padding:20px;color:#666;font-size:12px}
 
 /* Goals */
@@ -75,11 +80,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .prog-bar-wrap{height:4px;background:#444;margin-top:8px;overflow:hidden}
 .prog-bar{height:100%;background:#f0f0f0;transition:width .5s}
 
-/* Tab nav */
-.tabs{display:flex;gap:0;margin-bottom:20px;border:1.5px solid #555}
-.tab{flex:1;padding:10px;background:#333;border:none;border-right:1.5px solid #555;color:#888;font-size:11px;font-weight:700;cursor:pointer;text-align:center;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
-.tab:last-child{border-right:none}
-.tab.active{background:#f0f0f0;color:#1a1a1a}
+/* Tab nav — removed; single-page app */
 
 /* Set logging */
 .set-log{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #444}
@@ -88,67 +89,114 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .set-head span{flex:1;font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.5px}
 .set-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .set-num{width:18px;height:18px;background:#f0f0f0;color:#1a1a1a;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.set-row .set-inp{flex:1;min-width:0;width:auto;padding:6px 8px;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:12px;margin-bottom:0;border-radius:0;-webkit-appearance:none;appearance:none}
+.set-row .set-inp{flex:1;min-width:0;width:auto;padding:6px 8px;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:16px;margin-bottom:0;border-radius:0;-webkit-appearance:none;appearance:none}
 .set-row .set-inp:focus{outline:none;border-color:#888}
 
 /* Chart */
 .chart-svg{display:block;width:100%;height:auto}
 
-.section{display:none}
-.section.active{display:block}
-header{margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #555}
+/* Calendar */
+.cal-card{padding:14px;margin-bottom:16px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{background:#333;border:1.5px solid #555;color:#f0f0f0;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
+.cal-month{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#fff}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;text-align:center;font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.5px}
+.cal-dow span{padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;overflow:hidden;position:relative}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#2e2e2e;border:0;border-radius:50%;color:#aaa;position:relative;z-index:1;transition:all .15s;min-height:0;min-width:0;padding:2px 1px;overflow:hidden}
+.cal-day.other{background:transparent;color:#555;cursor:default;font-size:12px;font-weight:600}
+.cal-day.today{}
+.cal-day.selected{background:#f0f0f0}
+.cal-day.out{opacity:.35}
+.cal-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;min-width:0;min-height:0;overflow:hidden;box-sizing:border-box}
+.cal-cell--wt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:3px 1px 2px}
+.cal-cell--wt .cal-ring{width:68%;max-width:26px;flex:0 0 auto}
+.cal-wt-slot{width:100%;max-width:100%;height:18px;flex:0 0 18px;pointer-events:none;line-height:0}
+.cal-wt-slot svg.cal-ring-wt{display:block;width:100%;height:18px;margin:0}
+.cal-ring{position:relative;width:82%;max-width:32px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cal-ring svg{position:absolute;inset:0;width:100%;height:100%}
+.cal-ring svg.cal-ring-track{transform:rotate(-90deg);z-index:1;transform-origin:50% 50%;transition:opacity .3s ease,transform .35s cubic-bezier(.4,0,.2,1)}
+.cal-ring svg.cal-ring-track.ring-enter{animation:calRingIn .35s cubic-bezier(.4,0,.2,1) forwards}
+.cal-ring svg.cal-ring-track.ring-exit{animation:calRingOut .28s ease forwards}
+.cal-ring-fill{transition:stroke-dasharray .45s cubic-bezier(.4,0,.2,1),stroke .3s ease}
+.cal-ring.ring-gain{animation:ringGainPulse .45s ease}
+.cal-ring.ring-loss{animation:ringLossPulse .45s ease}
+@keyframes calRingIn{from{opacity:0;transform:rotate(-90deg) scale(.82)}to{opacity:1;transform:rotate(-90deg) scale(1)}}
+@keyframes calRingOut{from{opacity:1;transform:rotate(-90deg) scale(1)}to{opacity:0;transform:rotate(-90deg) scale(.82)}}
+@keyframes ringGainPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes ringLossPulse{0%,100%{transform:scale(1)}50%{transform:scale(.94)}}
+.cal-num{position:relative;z-index:1;font-size:11px;font-weight:700;line-height:1;color:#f0f0f0}
+.cal-num-plain{position:relative;z-index:1;font-size:11px;font-weight:700;line-height:1;color:#aaa}
+.cal-day.selected .cal-num,.cal-day.selected .cal-num-plain{color:#1a1a1a}
+.cal-wt-arc{fill:#bbb;font-size:10px;font-weight:700;letter-spacing:.55px}
+.cal-day.selected .cal-wt-arc{fill:#555}
+.cal-day.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#22c55e}
+.cal-day.complete .cal-ring svg.cal-ring-track circle:first-child{stroke:#166534}
+.cal-day.selected.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#16a34a}
+.cal-day.selected.complete .cal-ring svg.cal-ring-track circle:first-child{stroke:#86efac}
+.cal-day.complete .cal-num{color:#4ade80}
+.cal-day.selected.complete .cal-num{color:#15803d}
+@keyframes ringPop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cal-day.celebrate .cal-ring{animation:ringPop .55s ease}
+@keyframes dayGlow{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px #22c55e,0 0 14px rgba(34,197,94,.35)}}
+.cal-day.celebrate{animation:dayGlow .7s ease}
+.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden}
+/* outer element: outward burst (decelerating). inner element: gravity fall
+   (accelerating). running together, gravity overlays the burst into an arc */
+.confetti-piece{position:absolute;width:7px;height:7px;z-index:0;pointer-events:none;will-change:transform;animation:cfBurst 1.6s cubic-bezier(.12,.62,.3,1) forwards}
+.confetti-bit{display:block;width:100%;height:100%;border-radius:50%;opacity:0;will-change:transform,opacity;animation:cfFall 2.3s cubic-bezier(.3,0,.45,.95) forwards}
+@keyframes cfBurst{0%{transform:translate(-50%,-50%) scale(.6)}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.95)}}
+@keyframes cfFall{0%{transform:translate(0,0) rotate(0deg);opacity:0}12%{opacity:1}68%{opacity:1}100%{transform:translate(var(--drift),var(--fall)) rotate(var(--rot));opacity:0}}
+.celebrate-toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-140%);background:#22c55e;color:#fff;padding:10px 18px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;z-index:301;transition:transform .35s ease;pointer-events:none;border:1.5px solid #4ade80}
+.celebrate-toast.show{transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){.cal-day.celebrate .cal-ring,.cal-day.celebrate,.confetti-piece,.confetti-bit{animation:none}.celebrate-toast{transition:none}.cal-ring svg.cal-ring-track,.cal-ring-fill{transition:none}.cal-ring svg.cal-ring-track.ring-enter,.cal-ring svg.cal-ring-track.ring-exit,.cal-ring.ring-gain,.cal-ring.ring-loss{animation:none}}
+.cal-footer{margin-top:12px;padding-top:10px;border-top:1px solid #444;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:#888}
+.cal-footer label{white-space:nowrap;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#aaa}
+.cal-footer input[type=date]{flex:1;min-width:0;width:auto;padding:6px 8px;font-size:16px;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0}
+.cal-trend{margin-top:12px;padding-top:12px;border-top:1px solid #444}
+.cal-day-wt{text-align:center;font-size:14px;font-weight:800;color:#f0f0f0;padding:8px 0 2px;letter-spacing:-.3px}
+.cal-trend-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.cal-trend-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#aaa}
+.cal-goals{font-size:11px;color:#888;text-align:right}
+
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px}
+.header-main{flex:1;min-width:0}
+.settings-btn{background:#333;border:1.5px solid #555;color:#f0f0f0;width:36px;height:36px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>GAINS</h1>
-    <div class="subtitle">Fitness Tracker</div>
-    <div class="phase-info">Phase <span id="hPhase">1</span> · Week <span id="hWeek">1-2</span></div>
+    <div class="header-main">
+      <h1>GAINS</h1>
+      <div class="subtitle">Fitness Tracker</div>
+      <div class="phase-info"><span id="hDate">Today</span> · Phase <span id="hPhase">1</span> · Week <span id="hWeek">1</span></div>
+    </div>
+    <button class="settings-btn" onclick="openSettingsModal()" aria-label="Settings">⚙</button>
   </header>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab(event,'workout')">Workout</div>
-    <div class="tab" onclick="switchTab(event,'weight')">Weight</div>
-    <div class="tab" onclick="switchTab(event,'progress')">Progress</div>
-  </div>
+  <!-- Home -->
+  <div id="tab-workout">
 
-  <!-- ===== WORKOUT TAB ===== -->
-  <div id="tab-workout" class="section active">
-
-    <!-- Stats -->
-    <div class="grid-2">
-      <div class="stat-card">
-        <div class="stat-label">Weight Lost</div>
-        <div class="stat-value green" id="statLost">0 lbs</div>
+    <!-- Calendar -->
+    <div class="card cal-card">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="calPrev()" aria-label="Previous month">‹</button>
+        <div class="cal-month" id="calMonth"></div>
+        <button class="cal-nav" onclick="calNext()" aria-label="Next month">›</button>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Today Done</div>
-        <div class="stat-value" id="statDone">0/0</div>
-      </div>
-    </div>
-
-    <!-- Controls -->
-    <div class="grid-2" style="margin-bottom:16px">
-      <div>
-        <label class="lbl">Phase</label>
-        <select id="selPhase" onchange="onPhaseChange()">
-          <option value="1">Phase 1 (Wks 1–4)</option>
-          <option value="2">Phase 2 (Wks 5–8)</option>
-        </select>
-      </div>
-      <div>
-        <label class="lbl">Week</label>
-        <select id="selWeek">
-          <option value="1">Week 1–2</option>
-          <option value="3">Week 3–4</option>
-        </select>
+      <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-trend">
+        <div class="cal-trend-head">
+          <div class="cal-trend-title">Weight Trend</div>
+          <div class="cal-goals"><span id="progCurrent">160 lbs</span> · –10 lbs goal · <span id="goalLost">0</span> lost</div>
+        </div>
+        <div id="wtChart"><div class="empty">Log at least 2 weigh-ins to see your trend</div></div>
+        <div class="prog-bar-wrap"><div class="prog-bar" id="goalBar" style="width:0%"></div></div>
+        <div id="wtRecordAction"></div>
       </div>
     </div>
-
-    <!-- Day buttons -->
-    <div class="day-grid" id="dayGrid"></div>
 
     <!-- Exercise list -->
     <div class="card">
@@ -159,9 +207,9 @@ header{margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #555}
     </div>
   </div>
 
-  <!-- ===== WEIGHT TAB ===== -->
-  <div id="tab-weight" class="section">
-    <div class="card">
+  <!-- Weight modal -->
+  <div id="wtModal" class="modal" onclick="closeWeightModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
       <div class="card-header">
         <div class="card-title">Log Weight</div>
       </div>
@@ -170,59 +218,73 @@ header{margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #555}
         <button class="btn green" onclick="addWeight()">Save</button>
       </div>
       <div id="wtList"><div class="empty">No entries yet — log your starting weight (160 lbs) to begin tracking!</div></div>
+      <button class="btn modal-close" onclick="closeWeightModal()">Close</button>
     </div>
   </div>
 
-  <!-- ===== PROGRESS TAB ===== -->
-  <div id="tab-progress" class="section">
-    <div class="stat-card" style="margin-bottom:16px">
-      <div class="stat-label">Starting Weight</div>
-      <div class="stat-value">160 lbs</div>
-    </div>
-    <div class="stat-card" style="margin-bottom:16px">
-      <div class="stat-label">Current Weight</div>
-      <div class="stat-value green" id="progCurrent">160 lbs</div>
-    </div>
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px">Weight Trend</div>
-      <div id="wtChart"><div class="empty">Log at least 2 weigh-ins to see your trend</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title" style="margin-bottom:16px">8-Week Goals</div>
-      <div class="goal-grid">
-        <div class="goal-card goal-fat">
-          <div class="goal-lbl">Fat Loss</div>
-          <div class="goal-val">–10 lbs</div>
-          <div class="goal-sub">Lost: <span id="goalLost">0</span> lbs</div>
-          <div class="prog-bar-wrap"><div class="prog-bar" id="goalBar" style="width:0%"></div></div>
-        </div>
-        <div class="goal-card goal-muscle">
-          <div class="goal-lbl">Muscle</div>
-          <div class="goal-val">Build &amp; Define</div>
-          <div class="goal-sub">8 weeks progressive</div>
-        </div>
+  <!-- Settings modal -->
+  <div id="settingsModal" class="modal" onclick="closeSettingsModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="card-header">
+        <div class="card-title">Settings</div>
       </div>
-    </div>
-    <div class="card" id="progHistory">
-      <div class="card-title" style="margin-bottom:12px">Weight History</div>
-      <div id="histList"><div class="empty">No entries yet</div></div>
-    </div>
-    <div class="card">
+      <div class="cal-footer" style="margin-top:0;padding-top:0;border-top:none;margin-bottom:18px">
+        <label for="progStart">Program start</label>
+        <input type="date" id="progStart" onchange="onStartChange(this.value)">
+      </div>
       <div class="card-title" style="margin-bottom:4px">Backup &amp; Restore</div>
       <div style="font-size:11px;color:#888;margin-bottom:14px">Export your data to Notes or Messages. Paste it back any time to restore.</div>
       <button class="btn" style="width:100%;margin-bottom:8px" onclick="exportData()">Export — Copy Backup</button>
-      <textarea id="importBox" placeholder="Paste backup here to restore..." style="width:100%;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:12px;padding:10px;resize:vertical;min-height:70px;font-family:monospace;margin-bottom:8px"></textarea>
-      <button class="btn" style="width:100%;background:#555;border-color:#555;color:#f0f0f0" onclick="importData()">Restore from Backup</button>
+      <textarea id="importBox" placeholder="Paste backup here to restore..." style="width:100%;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:16px;padding:10px;resize:vertical;min-height:70px;font-family:monospace;margin-bottom:8px"></textarea>
+      <button class="btn" style="width:100%;background:#555;border-color:#555;color:#f0f0f0;margin-bottom:8px" onclick="importData()">Restore from Backup</button>
       <div id="backupMsg" style="font-size:11px;text-align:center;margin-top:8px;min-height:16px;color:#aaa"></div>
+      <button class="btn modal-close" onclick="closeSettingsModal()">Close</button>
     </div>
   </div>
 </div>
+<div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+<div id="celebrateToast" class="celebrate-toast">Workout complete</div>
 
 <script>
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const START_WT = 160;
-let phase = 1, weekKey = 1, selDay = DAYS[new Date().getDay()===0?6:new Date().getDay()-1];
+const PROGRAM_DAYS = 56;
+let phase = 1, weekKey = 1, selDay = 'Monday';
+let selDate = '', programStart = '';
+let calView = { y: 0, m: 0 };
 let log = {}, weights = [], setLog = {};
+
+/* ── Date helpers ── */
+function dateKey(d){
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function parseDate(s){return new Date(s+'T12:00:00')}
+function mondayOfWeek(d){
+  const x=new Date(d);const dow=x.getDay();
+  x.setDate(x.getDate()-(dow===0?6:dow-1));return x;
+}
+function dayNameFor(dateStr){
+  const d=parseDate(dateStr),idx=d.getDay()===0?6:d.getDay()-1;
+  return DAYS[idx];
+}
+function programDayIndex(dateStr){
+  return Math.round((parseDate(dateStr)-parseDate(programStart))/86400000);
+}
+function getPhaseWeek(idx){
+  if(idx<0||idx>=PROGRAM_DAYS)return null;
+  const weekNum=Math.floor(idx/7)+1;
+  if(weekNum<=4)return{phase:1,weekKey:weekNum<=2?1:3,weekNum};
+  return{phase:2,weekKey:weekNum<=6?5:7,weekNum};
+}
+function fmtDate(dateStr){
+  const d=parseDate(dateStr);
+  return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+}
+function syncPhaseFromDate(){
+  const pw=getPhaseWeek(programDayIndex(selDate));
+  if(pw){phase=pw.phase;weekKey=pw.weekKey;selDay=dayNameFor(selDate)}
+}
 
 /* ── Exercise database with full demos ── */
 const DEMOS = {
@@ -508,48 +570,357 @@ const PLAN = {
 };
 
 /* ── Storage ── */
-function save(){localStorage.setItem('gains_log',JSON.stringify(log));localStorage.setItem('gains_wt',JSON.stringify(weights));localStorage.setItem('gains_set',JSON.stringify(setLog))}
-function load(){try{const a=localStorage.getItem('gains_log'),b=localStorage.getItem('gains_wt'),c=localStorage.getItem('gains_set');if(a)log=JSON.parse(a);if(b)weights=JSON.parse(b);if(c)setLog=JSON.parse(c)}catch(e){}}
-
-/* ── Tabs ── */
-function switchTab(e,t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));e.currentTarget.classList.add('active');document.getElementById('tab-'+t).classList.add('active');if(t==='weight')renderWeights();if(t==='progress')renderProgress()}
-
-/* ── Phase/week ── */
-function onPhaseChange(){
-  phase=parseInt(document.getElementById('selPhase').value);
-  const sel=document.getElementById('selWeek');
-  sel.innerHTML=phase===1?'<option value="1">Week 1–2</option><option value="3">Week 3–4</option>':'<option value="5">Week 5–6</option><option value="7">Week 7–8</option>';
-  weekKey=phase===1?1:5;sel.value=weekKey;render()
+function save(){localStorage.setItem('gains_log',JSON.stringify(log));localStorage.setItem('gains_wt',JSON.stringify(weights));localStorage.setItem('gains_set',JSON.stringify(setLog));localStorage.setItem('gains_start',programStart)}
+function load(){
+  try{
+    const a=localStorage.getItem('gains_log'),b=localStorage.getItem('gains_wt'),c=localStorage.getItem('gains_set');
+    if(a)log=JSON.parse(a);if(b)weights=JSON.parse(b);if(c)setLog=JSON.parse(c);
+  }catch(e){}
+  programStart=localStorage.getItem('gains_start')||'';
+  if(!programStart){programStart=dateKey(mondayOfWeek(new Date()));localStorage.setItem('gains_start',programStart)}
+  const now=new Date();
+  selDate=dateKey(now);
+  calView={y:now.getFullYear(),m:now.getMonth()};
+  syncPhaseFromDate();
 }
 
-/* ── Day buttons ── */
-function renderDays(){
-  const g=document.getElementById('dayGrid');g.innerHTML='';
-  DAYS.forEach(d=>{const b=document.createElement('button');b.className='day-btn'+(d===selDay?' active':'');b.textContent=d.slice(0,3);b.onclick=()=>{selDay=d;render()};g.appendChild(b)})
+/* ── Tabs ── */
+function openWeightModal(){document.getElementById('wtModal').classList.add('open');renderWeights();document.getElementById('wtInput').focus()}
+function closeWeightModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('wtModal').classList.remove('open')}
+function openSettingsModal(){document.getElementById('settingsModal').classList.add('open')}
+function closeSettingsModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('settingsModal').classList.remove('open')}
+
+/* ── Calendar ── */
+function getWeightMap(){
+  const m={};
+  weights.forEach(e=>{const k=e.dateKey;if(k)m[k]=e.w});
+  return m;
+}
+function fmtWt(w){const n=Number(w);return n%1?n.toFixed(1):String(n)}
+function weightForDate(ds,map){return (map||getWeightMap())[ds]}
+function dayProgress(dateStr){
+  const pw=getPhaseWeek(programDayIndex(dateStr));
+  if(!pw)return null;
+  const exs=(PLAN[pw.phase]||{})[dayNameFor(dateStr)]||[];
+  if(!exs.length)return null;
+  const done=exs.filter((_,i)=>log[`${dateStr}_${i}`]).length;
+  return{done,total:exs.length,pct:Math.round(done/exs.length*100)};
+}
+function wtSlot(wt,uid){
+  return wt!=null?`<div class="cal-wt-slot">${wtArcSvg(wt,uid)}</div>`:'';
+}
+function wtArcSvg(wt,uid){
+  const id='wta-'+uid;
+  const label=fmtWt(wt);
+  const cx=18,yTop=2,yDip=9,halfW=label.length>5?13:14;
+  const x0=(cx-halfW).toFixed(1),x1=(cx+halfW).toFixed(1);
+  const sag=yDip-yTop;
+  const r=((halfW*halfW)+(sag*sag))/(2*sag);
+  const px=label.length>5?7:8;
+  return `<svg class="cal-ring-wt" viewBox="0 0 36 12" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><path id="${id}" d="M ${x0} ${yTop} A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 0 ${x1} ${yTop}"/></defs><text class="cal-wt-arc" style="font-size:${px}px"><textPath href="#${id}" startOffset="50%" text-anchor="middle">${label}</textPath></text></svg>`;
+}
+const RING_R=14,RING_C=2*Math.PI*RING_R;
+function ringStrokeColors(pct,selected){
+  if(pct>=100)return{track:selected?'#86efac':'#166534',fill:selected?'#16a34a':'#22c55e'};
+  return{track:selected?'#bbb':'#444',fill:selected?'#1a1a1a':'#f0f0f0'};
+}
+function ringSvgHtml(pct,selected,fromZero){
+  const {track,fill}=ringStrokeColors(pct,selected);
+  const dash=(pct/100)*RING_C;
+  const dashAttr=fromZero?`0 ${RING_C.toFixed(1)}`:`${dash.toFixed(1)} ${RING_C.toFixed(1)}`;
+  return `<svg class="cal-ring-track" viewBox="0 0 36 36" aria-hidden="true"><circle class="cal-ring-bg" cx="18" cy="18" r="${RING_R}" fill="none" stroke="${track}" stroke-width="3"/><circle class="cal-ring-fill" cx="18" cy="18" r="${RING_R}" fill="none" stroke="${fill}" stroke-width="3" stroke-dasharray="${dashAttr}" data-pct="${pct}" data-c="${RING_C.toFixed(1)}" stroke-linecap="round"/></svg>`;
+}
+function motionReduced(){return window.matchMedia('(prefers-reduced-motion: reduce)').matches}
+function setRingDash(cell,pct,fromZero){
+  const fill=cell.querySelector('.cal-ring-fill');
+  if(!fill)return;
+  const c=+fill.dataset.c;
+  const dash=(pct/100)*c;
+  const attr=`${dash.toFixed(1)} ${c}`;
+  fill.dataset.pct=pct;
+  if(fromZero){
+    fill.setAttribute('stroke-dasharray',`0 ${c}`);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>fill.setAttribute('stroke-dasharray',attr)));
+  }else fill.setAttribute('stroke-dasharray',attr);
+}
+function setRingColors(cell,pct,selected){
+  const {track,fill}=ringStrokeColors(pct,selected);
+  const bg=cell.querySelector('.cal-ring-bg');
+  const f=cell.querySelector('.cal-ring-fill');
+  if(bg)bg.setAttribute('stroke',track);
+  if(f)f.setAttribute('stroke',fill);
+  const ring=cell.querySelector('.cal-ring');
+  if(ring)ring.classList.toggle('complete',pct>=100);
+}
+function animateRingEnter(cell){
+  const svg=cell.querySelector('.cal-ring-track');
+  const fill=cell.querySelector('.cal-ring-fill');
+  if(!svg||!fill)return;
+  svg.classList.add('ring-enter');
+  setRingDash(cell,+fill.dataset.pct,true);
+  svg.addEventListener('animationend',()=>svg.classList.remove('ring-enter'),{once:true});
+}
+function animateRingExit(cell,done){
+  const svg=cell.querySelector('.cal-ring-track');
+  if(!svg||motionReduced()){done();return;}
+  svg.classList.add('ring-exit');
+  const finish=()=>{svg.classList.remove('ring-exit');done()};
+  svg.addEventListener('animationend',finish,{once:true});
+  setTimeout(finish,320);
+}
+function animateRingProgress(cell,pct,prevPct){
+  setRingDash(cell,pct,false);
+  const ring=cell.querySelector('.cal-ring');
+  if(!ring||pct===prevPct)return;
+  ring.classList.remove('ring-gain','ring-loss');
+  void ring.offsetWidth;
+  ring.classList.add(pct>prevPct?'ring-gain':'ring-loss');
+  setTimeout(()=>ring.classList.remove('ring-gain','ring-loss'),450);
+}
+function updateCalDayClasses(cell,dateStr,selected,wt,prog){
+  const today=dateKey(new Date());
+  const idx=programDayIndex(dateStr);
+  const inProg=idx>=0&&idx<PROGRAM_DAYS;
+  cell.className='cal-day'+(dateStr===today?' today':'')+(selected?' selected':'')+(wt!=null?' has-wt':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
+}
+function captureRingSnapshot(){
+  const m={};
+  document.querySelectorAll('.cal-day[data-date]').forEach(cell=>{
+    const fill=cell.querySelector('.cal-ring-fill');
+    m[cell.dataset.date]={hasRing:!!fill,pct:fill?+fill.dataset.pct:0};
+  });
+  return m;
+}
+function syncRingAnimations(prev){
+  const reduce=motionReduced();
+  document.querySelectorAll('.cal-day[data-date]').forEach(cell=>{
+    const ds=cell.dataset.date;
+    const fill=cell.querySelector('.cal-ring-fill');
+    const cur={hasRing:!!fill,pct:fill?+fill.dataset.pct:0};
+    const p=prev[ds]||{hasRing:false,pct:0};
+    if(reduce){if(cur.hasRing)setRingDash(cell,cur.pct,false);return;}
+    if(cur.hasRing&&!p.hasRing)animateRingEnter(cell);
+    else if(cur.hasRing&&p.hasRing){
+      setRingColors(cell,cur.pct,cell.classList.contains('selected'));
+      if(cur.pct!==p.pct)animateRingProgress(cell,cur.pct,p.pct);
+      else setRingDash(cell,cur.pct,false);
+    }
+  });
+}
+function patchCalendarDay(dateStr){
+  const cell=document.querySelector(`.cal-day[data-date="${dateStr}"]`);
+  if(!cell){renderCalendar();return;}
+  const d=parseDate(dateStr).getDate();
+  const selected=dateStr===selDate;
+  const wt=weightForDate(dateStr);
+  const prog=dayProgress(dateStr);
+  const ringPct=prog&&prog.done>0?prog.pct:null;
+  const uid=dateStr.replace(/-/g,'');
+  const prevFill=cell.querySelector('.cal-ring-fill');
+  const prev={hasRing:!!prevFill,pct:prevFill?+prevFill.dataset.pct:0};
+  updateCalDayClasses(cell,dateStr,selected,wt,prog);
+  if(prev.hasRing&&!ringPct){
+    if(motionReduced()){
+      cell.innerHTML=dayCellHtml(d,selected,wt,null,uid);
+      return;
+    }
+    animateRingExit(cell,()=>{cell.innerHTML=dayCellHtml(d,selected,wt,null,uid);});
+    return;
+  }
+  if(!prev.hasRing&&ringPct!=null){
+    cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,uid);
+    if(!motionReduced())animateRingEnter(cell);
+    return;
+  }
+  if(prev.hasRing&&ringPct!=null){
+    setRingColors(cell,ringPct,selected);
+    if(!motionReduced()&&prev.pct!==ringPct)animateRingProgress(cell,ringPct,prev.pct);
+    else setRingDash(cell,ringPct,false);
+    return;
+  }
+  cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,uid);
+}
+function ringHtml(dayNum,pct,selected,wt,uid){
+  const done=pct>=100;
+  const cellCls=wt!=null?' cal-cell--wt':'';
+  return `<div class="cal-cell${cellCls}"><div class="cal-ring${done?' complete':''}">${ringSvgHtml(pct,selected,false)}<span class="cal-num">${dayNum}</span></div>${wtSlot(wt,uid)}</div>`;
+}
+function isDayComplete(dateStr){
+  const p=dayProgress(dateStr);
+  return!!(p&&p.total>0&&p.done===p.total);
+}
+function celebrateDay(dateStr){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    showCelebrateToast();return;
+  }
+  showCelebrateToast();
+  launchConfetti(dateStr);
+  requestAnimationFrame(()=>{
+    const cell=document.querySelector(`.cal-day[data-date="${dateStr}"]`);
+    if(!cell)return;
+    cell.classList.remove('celebrate');
+    void cell.offsetWidth;
+    cell.classList.add('celebrate');
+    setTimeout(()=>cell.classList.remove('celebrate'),800);
+  });
+}
+function showCelebrateToast(){
+  const t=document.getElementById('celebrateToast');
+  t.classList.add('show');
+  clearTimeout(showCelebrateToast._t);
+  showCelebrateToast._t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function launchConfetti(dateStr){
+  // host pieces in the fixed full-screen layer so they render above every
+  // calendar cell and aren't clipped by the grid container
+  const layer=document.getElementById('confettiLayer');
+  if(!layer)return;
+  const cell=document.querySelector(`.cal-day[data-date="${dateStr}"]`);
+  const rect=cell?cell.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/3,width:36,height:36};
+  const ox=rect.left+rect.width/2,oy=rect.top+rect.height/2;
+  const cellR=Math.max(rect.width,rect.height)/2||16;
+  const colors=['#22c55e','#4ade80','#86efac','#f0f0f0','#fbbf24'];
+  const N=40;
+  for(let i=0;i<N;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left=ox+'px';
+    p.style.top=oy+'px';
+    const bit=document.createElement('i');
+    bit.className='confetti-bit';
+    bit.style.background=colors[i%colors.length];
+    p.appendChild(bit);
+    const angle=(i/N)*Math.PI*2+(Math.random()-0.5)*0.35;
+    const dist=cellR+34+Math.random()*80;
+    // outward burst target (handled by outer element); bias upward so pieces
+    // launch higher, like a fountain
+    p.style.setProperty('--dx',(Math.cos(angle)*dist).toFixed(1)+'px');
+    p.style.setProperty('--dy',(Math.sin(angle)*dist-(70+Math.random()*60)).toFixed(1)+'px');
+    // gravity fall (handled by inner element, overlaid on the burst) - gentler
+    p.style.setProperty('--fall',(70+Math.random()*90).toFixed(1)+'px');
+    p.style.setProperty('--drift',((Math.random()-0.5)*40).toFixed(1)+'px');
+    p.style.setProperty('--rot',(Math.random()*720-360)+'deg');
+    const delay=(Math.random()*0.06)+'s';
+    p.style.animationDelay=delay;
+    bit.style.animationDelay=delay;
+    layer.appendChild(p);
+    setTimeout(()=>p.remove(),2400);
+  }
+}
+function dayCellHtml(dayNum,selected,wt,ringPct,uid){
+  if(ringPct!=null)return ringHtml(dayNum,ringPct,selected,wt,uid);
+  if(wt!=null)return `<div class="cal-cell cal-cell--wt"><div class="cal-ring"><span class="${selected?'cal-num':'cal-num-plain'}">${dayNum}</span></div>${wtSlot(wt,uid)}</div>`;
+  return `<div class="cal-cell"><span class="cal-num-plain">${dayNum}</span></div>`;
+}
+function selectDate(dateStr){
+  selDate=dateStr;syncPhaseFromDate();
+  document.querySelectorAll('.cal-day[data-date]').forEach(cell=>{
+    const selected=cell.dataset.date===selDate;
+    cell.classList.toggle('selected',selected);
+    const fill=cell.querySelector('.cal-ring-fill');
+    if(fill)setRingColors(cell,+fill.dataset.pct,selected);
+  });
+  updateHeader();renderExercises();updateLostStat();updateWeightTrend();
+}
+function onStartChange(val){
+  if(!val)return;
+  programStart=val;save();renderCalendar();render();
+}
+function calPrev(){
+  calView.m--;
+  if(calView.m<0){calView.m=11;calView.y--}
+  renderCalendar();
+}
+function calNext(){
+  calView.m++;
+  if(calView.m>11){calView.m=0;calView.y++}
+  renderCalendar();
+}
+function renderCalendar(){
+  const prevRing=captureRingSnapshot();
+  const grid=document.getElementById('calGrid'),monthEl=document.getElementById('calMonth');
+  const startInput=document.getElementById('progStart');
+  if(startInput)startInput.value=programStart;
+  const first=new Date(calView.y,calView.m,1);
+  const startPad=(first.getDay()+6)%7;
+  const daysInMonth=new Date(calView.y,calView.m+1,0).getDate();
+  const prevDays=new Date(calView.y,calView.m,0).getDate();
+  monthEl.textContent=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  grid.innerHTML='';
+  const today=dateKey(new Date());
+  const wtMap=getWeightMap();
+  for(let i=0;i<startPad;i++){
+    const cell=document.createElement('div');
+    cell.className='cal-day other';
+    cell.textContent=prevDays-startPad+i+1;
+    grid.appendChild(cell);
+  }
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=dateKey(new Date(calView.y,calView.m,d));
+    const idx=programDayIndex(ds);
+    const inProg=idx>=0&&idx<PROGRAM_DAYS;
+    const prog=inProg?dayProgress(ds):null;
+    const wt=weightForDate(ds,wtMap);
+    const selected=ds===selDate;
+    const cell=document.createElement('div');
+    cell.className='cal-day'+(ds===today?' today':'')+(selected?' selected':'')+(wt!=null?' has-wt':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
+    if(inProg&&prog||wt!=null){
+      cell.dataset.date=ds;
+      const ringPct=prog&&prog.done>0?prog.pct:null;
+      cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,ds.replace(/-/g,''));
+      const tips=[];
+      if(prog)tips.push(`${prog.done}/${prog.total} exercises`);
+      if(wt!=null)tips.push(`${fmtWt(wt)} lbs`);
+      if(tips.length)cell.title=tips.join(' · ');
+      cell.onclick=()=>selectDate(ds);
+    }else{
+      cell.textContent=d;
+    }
+    grid.appendChild(cell);
+  }
+  const total=startPad+daysInMonth;
+  for(let i=total;i<(Math.ceil(total/7)*7||7);i++){
+    const cell=document.createElement('div');
+    cell.className='cal-day other';
+    cell.textContent=i-total+1;
+    grid.appendChild(cell);
+  }
+  requestAnimationFrame(()=>syncRingAnimations(prevRing));
 }
 
 /* ── Exercises ── */
-function logKey(d,i){return `${phase}_${weekKey}_${d}_${i}`}
+function logKey(i){return `${selDate}_${i}`}
 
 function renderExercises(){
-  const exs=(PLAN[phase]||{})[selDay]||[];
-  const done=exs.filter((_,i)=>log[logKey(selDay,i)]).length;
-  document.getElementById('dayTitle').textContent=selDay+"'s Workout";
-  document.getElementById('statDone').textContent=`${done}/${exs.length}`;
-  const el=document.getElementById('exList');
-  if(!exs.length){el.innerHTML='<div class="empty">No workout today</div>';return}
-  el.innerHTML='';
+  const idx=programDayIndex(selDate);
+  const pw=getPhaseWeek(idx);
+  const titleEl=document.getElementById('dayTitle');
+  const listEl=document.getElementById('exList');
+  if(!pw){
+    titleEl.textContent=idx<0?'Before program start':'Program complete';
+    listEl.innerHTML='<div class="empty">'+(idx<0?'Pick a date on or after your program start.':'Congrats — you finished the 8-week plan!')+'</div>';
+    return;
+  }
+  const exs=(PLAN[pw.phase]||{})[selDay]||[];
+  const wt=weightForDate(selDate);
+  titleEl.textContent=fmtDate(selDate)+' · '+selDay+(wt!=null?` · ${fmtWt(wt)} lbs`:'');
+  if(!exs.length){listEl.innerHTML='<div class="empty">No workout today</div>';return}
+  listEl.innerHTML='';
   exs.forEach((ex,i)=>{
-    const key=logKey(selDay,i),isDone=!!log[key];
+    const key=logKey(i),isDone=!!log[key];
     const dm=DEMOS[ex.n]||{muscles:[],steps:['No demo available.'],tip:'',yt:ex.n.replace(/ /g,'+')};
     const item=document.createElement('div');
     item.className='ex-item'+(isDone?' done':'');
     const saved=setLog[key]||[];
+    const cfg=setLogConfig(ex.n);
     const setRows=Array.from({length:ex.s},(_,n)=>{
       const sv=saved[n]||{};
+      const v1=sv[cfg.f1]??(cfg.a1?sv[cfg.a1]:'')??'';
+      const v2=sv[cfg.f2]??(cfg.a2?sv[cfg.a2]:'')??'';
+      const step2=cfg.step2?` step="${cfg.step2}"`:'';
       return `<div class="set-row"><span class="set-num">${n+1}</span>`+
-        `<input type="number" class="set-inp" placeholder="reps" value="${sv.reps??''}" onclick="event.stopPropagation()" oninput="logSet('${key}',${n},'reps',this.value)">`+
-        `<input type="text" class="set-inp" placeholder="band / lbs" value="${(sv.load??'').replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="logSet('${key}',${n},'load',this.value)"></div>`;
+        `<input type="number" class="set-inp" placeholder="${cfg.p1}" value="${v1}" onclick="event.stopPropagation()" oninput="logSet('${key}',${n},'${cfg.f1}',this.value)">`+
+        `<input type="${cfg.type2}" class="set-inp" placeholder="${cfg.p2}"${step2} value="${String(v2).replace(/"/g,'&quot;')}" onclick="event.stopPropagation()" oninput="logSet('${key}',${n},'${cfg.f2}',this.value)"></div>`;
     }).join('');
     item.innerHTML=`
       <div class="ex-row">
@@ -562,8 +933,8 @@ function renderExercises(){
       </div>
       <div class="demo-panel">
         <div class="set-log" onclick="event.stopPropagation()">
-          <div class="set-log-title">Log your sets · target ${ex.r}</div>
-          <div class="set-head"><span>Reps</span><span>Band / Weight</span></div>
+          <div class="set-log-title">Log your ${sessionLogType(ex.n)==='strength'?'sets':'session'} · target ${ex.r}</div>
+          <div class="set-head"><span>${cfg.l1}</span><span>${cfg.l2}</span></div>
           ${setRows}
         </div>
         <div class="demo-muscles">${dm.muscles.map(m=>`<span class="muscle-tag">${m}</span>`).join('')}</div>
@@ -571,12 +942,28 @@ function renderExercises(){
         ${dm.tip?`<div class="demo-tip"><strong>⚡ Pro Tip</strong>${dm.tip}</div>`:''}
         <a class="watch-btn" href="https://www.youtube.com/results?search_query=${dm.yt}" target="_blank">▶ Watch Demo on YouTube</a>
       </div>`;
-    el.appendChild(item)
+    listEl.appendChild(item)
   })
 }
 
-function toggle(e,i){e.stopPropagation();const key=logKey(selDay,i);log[key]=!log[key];save();render()}
+function toggle(e,i){e.stopPropagation();const key=logKey(i);const wasComplete=isDayComplete(selDate);log[key]=!log[key];save();const nowComplete=isDayComplete(selDate);patchCalendarDay(selDate);renderExercises();updateHeader();updateLostStat();updateWeightTrend();if(log[key]&&!wasComplete&&nowComplete)celebrateDay(selDate)}
 function toggleDemo(infoEl){const item=infoEl.closest('.ex-item');item.classList.toggle('open')}
+
+function sessionLogType(name){
+  if(name==='Stationary Bike')return'bike';
+  if(name==='Yoga/Stretching')return'yoga';
+  return'strength';
+}
+function setLogConfig(name){
+  switch(sessionLogType(name)){
+    case'bike':
+      return{f1:'minutes',f2:'miles',a1:'reps',a2:'load',l1:'Minutes',l2:'Miles',p1:'min',p2:'mi',step2:'0.1',type2:'number'};
+    case'yoga':
+      return{f1:'minutes',f2:'notes',a1:'reps',a2:'load',l1:'Minutes',l2:'Notes',p1:'min',p2:'focus, areas, how it felt',step2:'',type2:'text'};
+    default:
+      return{f1:'reps',f2:'load',a1:'',a2:'',l1:'Reps',l2:'Band / Weight',p1:'reps',p2:'band / lbs',step2:'',type2:'text'};
+  }
+}
 
 /* ── Per-set logging ── */
 function logSet(key,n,field,val){
@@ -590,31 +977,47 @@ function logSet(key,n,field,val){
 function addWeight(){
   const v=parseFloat(document.getElementById('wtInput').value);
   if(!v||v<50||v>500)return;
-  weights.push({date:new Date().toLocaleDateString(),w:v,phase,week:weekKey});
-  document.getElementById('wtInput').value='';save();renderWeights();updateLostStat()
+  weights.push({date:new Date().toLocaleDateString(),w:v,dateKey:selDate,phase,week:weekKey});
+  document.getElementById('wtInput').value='';save();renderWeights();render()
+}
+function weightEntryLabel(e){
+  return e.date||(e.dateKey?fmtDate(e.dateKey):'—');
 }
 function renderWeights(){
   const c=document.getElementById('wtList');
   if(!weights.length){c.innerHTML='<div class="empty">No entries yet — log your starting weight (160 lbs) to begin!</div>';return}
-  c.innerHTML=[...weights].reverse().map(e=>`<div class="weight-entry"><span>${e.date}</span><span>${e.w} lbs</span></div>`).join('')
+  c.innerHTML=[...weights].map((e,i)=>({e,i})).reverse().map(({e,i})=>`<div class="weight-entry"><span>${weightEntryLabel(e)}</span><span class="weight-entry-meta"><span>${e.w} lbs</span><button type="button" class="wt-del" onclick="removeWeight(${i})" aria-label="Remove entry">×</button></span></div>`).join('')
+}
+function removeWeight(idx){
+  if(idx<0||idx>=weights.length)return;
+  weights.splice(idx,1);
+  save();renderWeights();render();
 }
 function updateLostStat(){
-  if(!weights.length){document.getElementById('statLost').textContent='0 lbs';return}
+  const stat=document.getElementById('statLost');
+  if(!stat)return;
+  if(!weights.length){stat.textContent='0 lbs';return}
   const l=(START_WT-weights[weights.length-1].w).toFixed(1);
-  document.getElementById('statLost').textContent=(l>=0?'–':'+')+(Math.abs(l))+' lbs'
+  stat.textContent=(l>=0?'–':'+')+(Math.abs(l))+' lbs'
 }
 
-/* ── Progress ── */
-function renderProgress(){
+/* ── Weight trend (in calendar) ── */
+function renderRecordWeightAction(){
+  const el=document.getElementById('wtRecordAction');
+  if(!el)return;
+  const wt=weightForDate(selDate);
+  if(wt!=null)el.innerHTML=`<div class="cal-day-wt">${fmtWt(wt)} lbs</div>`;
+  else el.innerHTML=`<button class="btn block" onclick="openWeightModal()">Record Weight</button>`;
+}
+function updateWeightTrend(){
   const cur=weights.length?weights[weights.length-1].w:START_WT;
   const lost=Math.max(0,(START_WT-cur).toFixed(1));
   const pct=Math.min(100,(lost/10*100)).toFixed(0);
   document.getElementById('progCurrent').textContent=cur+' lbs';
   document.getElementById('goalLost').textContent=lost;
   document.getElementById('goalBar').style.width=pct+'%';
-  const h=document.getElementById('histList');
-  h.innerHTML=weights.length?[...weights].reverse().map(e=>`<div class="weight-entry"><span>${e.date}</span><span>${e.w} lbs</span></div>`).join(''):'<div class="empty">No entries yet</div>';
-  renderChart()
+  renderChart();
+  renderRecordWeightAction();
 }
 
 /* ── Weight trend chart ── */
@@ -641,17 +1044,25 @@ function renderChart(){
 
 /* ── Header ── */
 function updateHeader(){
-  document.getElementById('hPhase').textContent=phase;
-  const wkLabels={1:'1–2',3:'3–4',5:'5–6',7:'7–8'};
-  document.getElementById('hWeek').textContent=wkLabels[weekKey]||weekKey
+  const idx=programDayIndex(selDate);
+  const pw=getPhaseWeek(idx);
+  const today=dateKey(new Date());
+  document.getElementById('hDate').textContent=selDate===today?'Today':fmtDate(selDate);
+  if(pw){
+    document.getElementById('hPhase').textContent=pw.phase;
+    document.getElementById('hWeek').textContent=pw.weekNum;
+  }else{
+    document.getElementById('hPhase').textContent='—';
+    document.getElementById('hWeek').textContent='—';
+  }
 }
 
 /* ── Main render ── */
-function render(){updateHeader();renderDays();renderExercises();updateLostStat()}
+function render(){updateHeader();renderCalendar();renderExercises();updateLostStat();updateWeightTrend()}
 
 /* ── Backup & Restore ── */
 function exportData(){
-  const backup=JSON.stringify({log,weights,setLog,exported:new Date().toLocaleString()});
+  const backup=JSON.stringify({log,weights,setLog,programStart,exported:new Date().toLocaleString()});
   navigator.clipboard.writeText(backup).then(()=>{
     showMsg('✓ Copied to clipboard — paste into Notes to save','#aaa')
   }).catch(()=>{
@@ -669,7 +1080,8 @@ function importData(){
     if(d.log)log=d.log;
     if(d.weights)weights=d.weights;
     if(d.setLog)setLog=d.setLog;
-    save();render();renderWeights();renderProgress();
+    if(d.programStart){programStart=d.programStart;localStorage.setItem('gains_start',programStart)}
+    save();render();renderWeights();updateWeightTrend();
     document.getElementById('importBox').value='';
     showMsg('✓ Data restored successfully','#aaa')
   }catch(e){showMsg('Could not read backup — check it was copied fully','#e55')}
@@ -682,7 +1094,6 @@ function showMsg(txt,color){
 
 /* ── Init ── */
 load();
-document.getElementById('selWeek').addEventListener('change',e=>{weekKey=parseInt(e.target.value);render()});
 render();
 </script>
 </body>
