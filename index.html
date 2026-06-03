@@ -195,7 +195,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px}
 .header-main{flex:1;min-width:0;display:flex;align-items:center;gap:14px}
 .header-logo{width:32px;height:32px;flex-shrink:0;border-radius:7px}
-.header-main h1{flex:1;min-width:0}
+.header-main h1{flex:1;min-width:0;font-size:17px}
 .settings-btn{background:transparent;border:0;color:#f0f0f0;width:36px;height:36px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
 </head>
@@ -223,6 +223,11 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
       <div class="cal-grid" id="calGrid"></div>
     </div>
 
+    <!-- Exercise list -->
+    <div class="card ex-card">
+      <div id="exList"></div>
+    </div>
+
     <div class="card trend-card">
       <div class="cal-trend">
         <div class="cal-trend-head">
@@ -237,11 +242,6 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
         </div>
         <div id="wtChart"><div class="empty">Log at least 2 weigh-ins to see your trend</div></div>
       </div>
-    </div>
-
-    <!-- Exercise list -->
-    <div class="card ex-card">
-      <div id="exList"></div>
     </div>
   </div>
 
