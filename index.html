@@ -130,7 +130,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .ex-item-wt{cursor:default}
 .ex-item-wt .wt-record-btn{display:block;width:100%;text-align:left;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
 .ex-item-wt .wt-record-btn.wt-record-armed .ex-name,.ex-item-wt .wt-record-btn.wt-record-armed .ex-meta{color:#f87171}
-.ex-item-wt .ex-wt-chk{border-color:#888;color:#bbb}
+.ex-item-wt:not(.has-wt) .ex-wt-chk{cursor:pointer}
 .ex-item-wt.has-wt .ex-wt-chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .ex-item-wt:not(.has-wt) .ex-row{align-items:center;min-height:68px}
 .ex-item-wt .ex-arrow{visibility:hidden;pointer-events:none}
@@ -1097,7 +1097,7 @@ function renderRecordWeightAction(){
   const wt=weightForDate(selDate);
   el.className='ex-item ex-item-wt'+(wt!=null?' has-wt':'');
   if(wt!=null)el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk">${li('check')}</div><button type="button" class="ex-info wt-record-btn" id="dayWtDisplay" onclick="handleDayWtClick()" aria-label="Tap twice to remove weight"><div class="ex-name">${fmtWt(wt)} lbs</div><div class="ex-meta">Weight logged</div></button><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
-  else el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" aria-hidden="true"></div><div class="ex-info wt-record-btn" onclick="openWeightModal()" role="button" tabindex="0"><div class="ex-name">Record Weight</div></div><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
+  else el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" role="button" tabindex="0" aria-label="Record weight" onclick="openWeightModal()"></div><div class="ex-info wt-record-btn" onclick="openWeightModal()" role="button" tabindex="0"><div class="ex-name">Record Weight</div></div><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
   refreshIcons(el);
 }
 const GOAL_RING_C=(2*Math.PI*14).toFixed(1);
