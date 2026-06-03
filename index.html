@@ -30,8 +30,20 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .ex-name{font-size:13px;font-weight:600;color:#f0f0f0}
 .ex-item.done .ex-name{text-decoration:line-through;color:#666}
 .ex-meta{font-size:11px;color:#888;margin-top:1px}
-.ex-arrow{font-size:10px;color:#666;transition:transform .15s}
+.ex-arrow{display:flex;align-items:center;justify-content:center;color:#666;transition:transform .15s}
+.ex-arrow [data-lucide]{width:14px;height:14px}
 .ex-item.open .ex-arrow{transform:rotate(90deg)}
+.chk [data-lucide]{width:12px;height:12px}
+.ex-item-wt:not(.has-wt) .ex-wt-chk [data-lucide]{color:#bbb}
+.ex-item-wt.has-wt .ex-wt-chk [data-lucide]{color:#1a1a1a}
+.demo-tip-label{display:inline-flex;align-items:center;gap:5px}
+.demo-tip-label [data-lucide]{width:12px;height:12px}
+.watch-btn [data-lucide]{width:12px;height:12px;flex-shrink:0}
+.btn [data-lucide],.cal-nav [data-lucide]{width:16px;height:16px;flex-shrink:0}
+.settings-btn [data-lucide]{width:18px;height:18px}
+.backup-msg-row{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.backup-msg-row [data-lucide]{width:14px;height:14px;flex-shrink:0}
+[data-lucide]{stroke:currentColor}
 
 /* Demo panel */
 .demo-panel{display:none;border-top:1.5px solid #444;padding:14px;background:#272727}
@@ -43,14 +55,14 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .demo-step{display:flex;gap:10px;margin-bottom:7px;font-size:12px;line-height:1.5;color:#ccc}
 .step-num{width:18px;height:18px;background:#f0f0f0;color:#1a1a1a;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .demo-tip{padding:8px 12px;font-size:12px;color:#ccc;margin-bottom:12px;background:#303030;border-radius:8px}
-.demo-tip strong{display:block;margin-bottom:2px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#fff}
+.demo-tip strong,.demo-tip-label{display:block;margin-bottom:2px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#fff}
 .watch-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f0f0f0;border:none;color:#1a1a1a;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;text-transform:uppercase;letter-spacing:.5px}
 
 /* Weight log */
 .weight-input-row{display:flex;gap:8px;margin-bottom:12px}
 .weight-input-row input{flex:1;margin-bottom:0}
 .modal--sheet .weight-input-row input,.modal--sheet .weight-input-row .btn{border-radius:8px}
-.btn{background:#f0f0f0;border:1.5px solid #f0f0f0;color:#1a1a1a;padding:8px 14px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#f0f0f0;border:1.5px solid #f0f0f0;color:#1a1a1a;padding:8px 14px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
 .btn.green{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .btn.block{width:100%;margin-top:12px}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;padding:20px;align-items:flex-end;justify-content:center}
@@ -79,9 +91,13 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .goal-val{font-size:14px;font-weight:800;margin-bottom:4px;color:#fff}
 .goal-sub{font-size:11px;color:#aaa}
 
-/* Progress bar */
-.prog-bar-wrap{height:4px;background:#444;margin-top:8px;overflow:hidden}
-.prog-bar{height:100%;background:#f0f0f0;transition:width .5s}
+/* Goal ring */
+.cal-trend-head{position:relative;display:flex;align-items:center;justify-content:flex-start;min-height:36px;padding-right:40px;margin-bottom:12px}
+.cal-goals{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:10px 20px;width:100%;font-size:14px;font-weight:600;color:#aaa;text-align:left}
+.cal-goal-metric{white-space:nowrap}
+.goal-ring{position:absolute;right:0;top:50%;transform:translateY(-50%);width:32px;height:32px;flex-shrink:0}
+.goal-ring svg{display:block;width:100%;height:100%}
+.goal-ring-fill{transition:stroke-dasharray .5s ease}
 
 /* Tab nav — removed; single-page app */
 
@@ -96,7 +112,8 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .set-row .set-inp:focus{outline:none;border-color:#888}
 
 /* Chart */
-.chart-svg{display:block;width:100%;height:auto}
+#wtChart{overflow:visible}
+.chart-svg{display:block;width:100%;height:180px;overflow:visible}
 
 /* Calendar */
 #tab-workout > .card.cal-card{background:transparent;border:0;padding:0;margin-bottom:20px}
@@ -109,20 +126,25 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .ex-item-wt{cursor:default}
 .ex-item-wt .wt-record-btn{display:block;width:100%;text-align:left;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
 .ex-item-wt .wt-record-btn.wt-record-armed .ex-name,.ex-item-wt .wt-record-btn.wt-record-armed .ex-meta{color:#f87171}
-.ex-item-wt .ex-wt-chk{border-color:#888;color:#bbb;font-size:8px}
-.ex-item-wt.has-wt .ex-wt-chk{background:transparent}
+.ex-item-wt .ex-wt-chk{border-color:#888;color:#bbb}
+.ex-item-wt.has-wt .ex-wt-chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .ex-item-wt:not(.has-wt) .ex-row{min-height:68px}
 .ex-item-wt:not(.has-wt) .wt-record-btn{display:flex;align-items:center}
 .ex-item-wt .ex-arrow{visibility:hidden;pointer-events:none}
-.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .cal-nav{background:transparent;border:0;color:#f0f0f0;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
 .cal-month{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#fff}
-.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;text-align:center;font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.5px}
-.cal-dow span{padding:4px 0}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:12px 0 10px;text-align:center;font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.5px}
+.cal-dow span{padding:6px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;overflow:visible;position:relative;padding:4px 0;align-items:start}
-.cal-day{display:flex;align-items:center;justify-content:center;cursor:pointer;background:#2e2e2e;border:0;border-radius:50%;color:#aaa;position:relative;z-index:1;transition:all .15s;min-height:0;min-width:0;padding:2px 1px;overflow:visible;aspect-ratio:1;width:100%;justify-self:center;align-self:center}
-.cal-day.has-wt{aspect-ratio:auto;height:auto;width:100%;justify-self:stretch;align-self:stretch;border-radius:18px}
-.cal-day.other{background:transparent;color:#555;cursor:default;font-size:12px;font-weight:600}
+.cal-day{display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;position:relative;z-index:1;transition:all .15s;min-height:0;min-width:0;padding:2px 1px;overflow:visible;width:100%;justify-self:center;align-self:center}
+.cal-day:not(.other){aspect-ratio:auto;height:auto;background:transparent;border:0;border-radius:0;flex-direction:column;gap:0}
+.cal-day:not(.other) .cal-ring{width:100%;max-width:100%;background:#2e2e2e;border-radius:50%}
+.cal-day.selected:not(.other){background:transparent}
+.cal-day.selected:not(.other) .cal-ring{background:#f0f0f0}
+.cal-day.other{background:transparent;color:#555;cursor:default;aspect-ratio:auto;height:auto;flex-direction:column;gap:0;border-radius:0}
+.cal-day.other .cal-ring{width:100%;max-width:100%;background:transparent;border-radius:50%}
+.cal-day.other .cal-num-plain{color:#555}
 .cal-day.today{}
 .cal-day.selected{background:#f0f0f0}
 .cal-day.out{opacity:.35}
@@ -130,6 +152,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-cell--wt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:3px 1px 2px}
 .cal-cell--wt .cal-ring{width:68%;max-width:26px;flex:0 0 auto}
 .cal-wt-slot{width:100%;max-width:100%;height:18px;flex:0 0 18px;pointer-events:none;line-height:0}
+.cal-wt-slot--empty{visibility:hidden}
 .cal-wt-slot svg.cal-ring-wt{display:block;width:100%;height:18px;margin:0}
 .cal-ring{position:relative;width:82%;max-width:32px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cal-ring svg{position:absolute;inset:0;width:100%;height:100%}
@@ -147,11 +170,8 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-num-plain{position:relative;z-index:1;font-size:11px;font-weight:700;line-height:1;color:#aaa}
 .cal-day.selected .cal-num,.cal-day.selected .cal-num-plain{color:#1a1a1a}
 .cal-wt-arc{fill:#bbb;font-size:10px;font-weight:700;letter-spacing:.55px}
-.cal-day.selected .cal-wt-arc{fill:#555}
 .cal-day.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#22c55e}
-.cal-day.complete .cal-ring svg.cal-ring-track circle:first-child{stroke:#166534}
 .cal-day.selected.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#16a34a}
-.cal-day.selected.complete .cal-ring svg.cal-ring-track circle:first-child{stroke:#86efac}
 @keyframes ringPop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
 .cal-day.celebrate .cal-ring{animation:ringPop .55s ease}
 @keyframes dayGlow{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px #22c55e,0 0 14px rgba(34,197,94,.35)}}
@@ -170,9 +190,6 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-trend{margin-top:24px;padding-top:0}
 .cal-day-wt{display:block;width:100%;text-align:center;font-size:14px;font-weight:800;color:#f0f0f0;padding:8px 0 2px;letter-spacing:-.3px;background:transparent;border:0;cursor:pointer}
 .cal-day-wt.cal-day-wt-armed{color:#f87171}
-.cal-trend-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
-.cal-trend-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#aaa}
-.cal-goals{font-size:11px;color:#888;text-align:right}
 
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px}
 .header-main{flex:1;min-width:0}
@@ -185,7 +202,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
     <div class="header-main">
       <h1><span id="hDate">Today</span> · Phase <span id="hPhase">1</span> · Week <span id="hWeek">1</span></h1>
     </div>
-    <button class="settings-btn" onclick="openSettingsModal()" aria-label="Settings">⚙</button>
+    <button class="settings-btn" onclick="openSettingsModal()" aria-label="Settings"><i data-lucide="settings"></i></button>
   </header>
 
   <!-- Home -->
@@ -194,19 +211,24 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
     <!-- Calendar -->
     <div class="card cal-card">
       <div class="cal-header">
-        <button class="cal-nav" onclick="calPrev()" aria-label="Previous month">‹</button>
+        <button class="cal-nav" onclick="calPrev()" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
         <div class="cal-month" id="calMonth"></div>
-        <button class="cal-nav" onclick="calNext()" aria-label="Next month">›</button>
+        <button class="cal-nav" onclick="calNext()" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
       </div>
       <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
       <div class="cal-grid" id="calGrid"></div>
       <div class="cal-trend">
         <div class="cal-trend-head">
-          <div class="cal-trend-title">Weight Trend</div>
-          <div class="cal-goals"><span id="progCurrent">160 lbs</span> · –10 lbs goal · <span id="goalLost">0</span> lost</div>
+          <div class="cal-goals">
+            <span class="cal-goal-metric" id="progCurrent">160 lbs</span>
+            <span class="cal-goal-metric">–10 lbs goal</span>
+            <span class="cal-goal-metric"><span id="goalLost">0</span> lost</span>
+          </div>
+          <div class="goal-ring" aria-hidden="true">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="#444" stroke-width="3"/><circle id="goalBar" class="goal-ring-fill" cx="18" cy="18" r="14" fill="none" stroke="#f0f0f0" stroke-width="3" stroke-linecap="round" transform="rotate(-90 18 18)" stroke-dasharray="0 88"/></svg>
+          </div>
         </div>
         <div id="wtChart"><div class="empty">Log at least 2 weigh-ins to see your trend</div></div>
-        <div class="prog-bar-wrap"><div class="prog-bar" id="goalBar" style="width:0%"></div></div>
       </div>
     </div>
 
@@ -224,9 +246,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
       </div>
       <div class="weight-input-row">
         <input type="number" id="wtInput" placeholder="Enter weight (lbs)" step="0.1">
-        <button class="btn green" onclick="addWeight()">Save</button>
+        <button class="btn green" onclick="addWeight()"><i data-lucide="check"></i> Save</button>
       </div>
-      <button class="btn modal-close" onclick="closeWeightModal()">Close</button>
+      <button class="btn modal-close" onclick="closeWeightModal()"><i data-lucide="x"></i> Close</button>
     </div>
   </div>
 
@@ -242,16 +264,24 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
       </div>
       <div class="card-title" style="margin-bottom:4px">Backup &amp; Restore</div>
       <div style="font-size:11px;color:#888;margin-bottom:14px">Export your data to Notes or Messages. Paste it back any time to restore.</div>
-      <button class="btn" style="width:100%;margin-bottom:8px" onclick="exportData()">Export — Copy Backup</button>
+      <button class="btn" style="width:100%;margin-bottom:8px" onclick="exportData()"><i data-lucide="copy"></i> Export — Copy Backup</button>
       <textarea id="importBox" placeholder="Paste backup here to restore..." style="width:100%;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:16px;padding:10px;resize:vertical;min-height:70px;font-family:monospace;margin-bottom:8px"></textarea>
-      <button class="btn" style="width:100%;background:#555;border-color:#555;color:#f0f0f0;margin-bottom:8px" onclick="importData()">Restore from Backup</button>
+      <button class="btn" style="width:100%;background:#555;border-color:#555;color:#f0f0f0;margin-bottom:8px" onclick="importData()"><i data-lucide="upload"></i> Restore from Backup</button>
       <div id="backupMsg" style="font-size:11px;text-align:center;margin-top:8px;min-height:16px;color:#aaa"></div>
-      <button class="btn modal-close" onclick="closeSettingsModal()">Close</button>
+      <button class="btn modal-close" onclick="closeSettingsModal()"><i data-lucide="x"></i> Close</button>
     </div>
   </div>
 </div>
 <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.563.0/dist/umd/lucide.min.js"></script>
 <script>
+function refreshIcons(root){
+  if(!window.lucide)return;
+  const o={attrs:{'stroke-width':2}};
+  if(root)o.root=root;
+  lucide.createIcons(o);
+}
+const li=n=>`<i data-lucide="${n}"></i>`;
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const START_WT = 160;
 const PROGRAM_DAYS = 56;
@@ -619,7 +649,8 @@ function dayProgress(dateStr){
   return{done,total:exs.length,pct:Math.round(done/exs.length*100)};
 }
 function wtSlot(wt,uid){
-  return wt!=null?`<div class="cal-wt-slot">${wtArcSvg(wt,uid)}</div>`:'';
+  if(wt!=null)return`<div class="cal-wt-slot">${wtArcSvg(wt,uid)}</div>`;
+  return`<div class="cal-wt-slot cal-wt-slot--empty" aria-hidden="true"></div>`;
 }
 function wtArcSvg(wt,uid){
   const id='wta-'+uid;
@@ -633,7 +664,7 @@ function wtArcSvg(wt,uid){
 }
 const RING_R=14,RING_C=2*Math.PI*RING_R;
 function ringStrokeColors(pct,selected){
-  if(pct>=100)return{track:selected?'#86efac':'#166534',fill:selected?'#16a34a':'#22c55e'};
+  if(pct>=100)return{track:selected?'#bbb':'#444',fill:selected?'#16a34a':'#22c55e'};
   return{track:selected?'#bbb':'#444',fill:selected?'#1a1a1a':'#f0f0f0'};
 }
 function ringSvgHtml(pct,selected,fromZero){
@@ -693,7 +724,7 @@ function updateCalDayClasses(cell,dateStr,selected,wt,prog){
   const today=dateKey(new Date());
   const idx=programDayIndex(dateStr);
   const inProg=idx>=0&&idx<PROGRAM_DAYS;
-  cell.className='cal-day'+(dateStr===today?' today':'')+(selected?' selected':'')+(wt!=null?' has-wt':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
+  cell.className='cal-day'+(dateStr===today?' today':'')+(selected?' selected':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
 }
 function captureRingSnapshot(){
   const m={};
@@ -791,8 +822,7 @@ function patchCalendarDay(dateStr){
 }
 function ringHtml(dayNum,pct,selected,wt,uid){
   const done=pct>=100;
-  const cellCls=wt!=null?' cal-cell--wt':'';
-  return `<div class="cal-cell${cellCls}"><div class="cal-ring${done?' complete':''}">${ringSvgHtml(pct,selected,false)}<span class="cal-num">${dayNum}</span></div>${wtSlot(wt,uid)}</div>`;
+  return`<div class="cal-cell cal-cell--wt"><div class="cal-ring${done?' complete':''}">${ringSvgHtml(pct,selected,false)}<span class="cal-num">${dayNum}</span></div>${wtSlot(wt,uid)}</div>`;
 }
 function isDayComplete(dateStr){
   const p=dayProgress(dateStr);
@@ -849,8 +879,10 @@ function launchConfetti(dateStr){
 }
 function dayCellHtml(dayNum,selected,wt,ringPct,uid){
   if(ringPct!=null)return ringHtml(dayNum,ringPct,selected,wt,uid);
-  if(wt!=null)return `<div class="cal-cell cal-cell--wt"><div class="cal-ring"><span class="${selected?'cal-num':'cal-num-plain'}">${dayNum}</span></div>${wtSlot(wt,uid)}</div>`;
-  return `<div class="cal-cell"><span class="cal-num-plain">${dayNum}</span></div>`;
+  return`<div class="cal-cell cal-cell--wt"><div class="cal-ring"><span class="${selected?'cal-num':'cal-num-plain'}">${dayNum}</span></div>${wtSlot(wt,uid)}</div>`;
+}
+function otherDayHtml(dayNum){
+  return`<div class="cal-cell cal-cell--wt"><div class="cal-ring"><span class="cal-num-plain">${dayNum}</span></div><div class="cal-wt-slot cal-wt-slot--empty" aria-hidden="true"></div></div>`;
 }
 function selectDate(dateStr){
   selDate=dateStr;syncPhaseFromDate();
@@ -892,7 +924,7 @@ function renderCalendar(){
   for(let i=0;i<startPad;i++){
     const cell=document.createElement('div');
     cell.className='cal-day other';
-    cell.textContent=prevDays-startPad+i+1;
+    cell.innerHTML=otherDayHtml(prevDays-startPad+i+1);
     grid.appendChild(cell);
   }
   for(let d=1;d<=daysInMonth;d++){
@@ -903,24 +935,18 @@ function renderCalendar(){
     const wt=weightForDate(ds,wtMap);
     const selected=ds===selDate;
     const cell=document.createElement('div');
-    cell.className='cal-day'+(ds===today?' today':'')+(selected?' selected':'')+(wt!=null?' has-wt':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
-    if(inProg&&prog||wt!=null){
-      cell.dataset.date=ds;
-      const ringPct=prog&&prog.done>0?prog.pct:null;
-      cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,ds.replace(/-/g,''));
-      const tips=[];
-      if(prog)tips.push(`${prog.done}/${prog.total} exercises`);
-      bindCalendarDayCell(cell,ds,prog,wt);
-    }else{
-      cell.textContent=d;
-    }
+    cell.className='cal-day'+(ds===today?' today':'')+(selected?' selected':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
+    cell.dataset.date=ds;
+    const ringPct=inProg&&prog&&prog.done>0?prog.pct:null;
+    cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,ds.replace(/-/g,''));
+    bindCalendarDayCell(cell,ds,prog,wt);
     grid.appendChild(cell);
   }
   const total=startPad+daysInMonth;
   for(let i=total;i<(Math.ceil(total/7)*7||7);i++){
     const cell=document.createElement('div');
     cell.className='cal-day other';
-    cell.textContent=i-total+1;
+    cell.innerHTML=otherDayHtml(i-total+1);
     grid.appendChild(cell);
   }
   requestAnimationFrame(()=>syncRingAnimations(prevRing));
@@ -959,12 +985,12 @@ function renderExercises(){
     }).join('');
     item.innerHTML=`
       <div class="ex-row">
-        <div class="chk" onclick="toggle(event,${i})">${isDone?'✓':''}</div>
+        <div class="chk" onclick="toggle(event,${i})">${isDone?li('check'):''}</div>
         <div class="ex-info" onclick="toggleDemo(this)">
           <div class="ex-name">${ex.n}</div>
           <div class="ex-meta">${ex.s} sets × ${ex.r}</div>
         </div>
-        <div class="ex-arrow" onclick="toggleDemo(this.previousElementSibling)">▶</div>
+        <div class="ex-arrow" onclick="toggleDemo(this.previousElementSibling)">${li('chevron-right')}</div>
       </div>
       <div class="demo-panel">
         <div class="set-log" onclick="event.stopPropagation()">
@@ -974,12 +1000,13 @@ function renderExercises(){
         </div>
         <div class="demo-muscles">${dm.muscles.map(m=>`<span class="muscle-tag">${m}</span>`).join('')}</div>
         <div class="demo-steps">${dm.steps.map((s,n)=>`<div class="demo-step"><div class="step-num">${n+1}</div><div>${s}</div></div>`).join('')}</div>
-        ${dm.tip?`<div class="demo-tip"><strong>⚡ Pro Tip</strong>${dm.tip}</div>`:''}
-        <a class="watch-btn" href="https://www.youtube.com/results?search_query=${dm.yt}" target="_blank">▶ Watch Demo on YouTube</a>
+        ${dm.tip?`<div class="demo-tip"><strong class="demo-tip-label">${li('zap')} Pro Tip</strong>${dm.tip}</div>`:''}
+        <a class="watch-btn" href="https://www.youtube.com/results?search_query=${dm.yt}" target="_blank">${li('play')} Watch Demo on YouTube</a>
       </div>`;
     listEl.appendChild(item)
   });
   renderRecordWeightAction();
+  refreshIcons(document.getElementById('exList'));
 }
 
 function toggle(e,i){e.stopPropagation();const key=logKey(i);const wasComplete=isDayComplete(selDate);log[key]=!log[key];save();const nowComplete=isDayComplete(selDate);patchCalendarDay(selDate);renderExercises();updateHeader();updateLostStat();updateWeightTrend();if(log[key]&&!wasComplete&&nowComplete)celebrateDay(selDate)}
@@ -1062,16 +1089,24 @@ function renderRecordWeightAction(){
   listEl.appendChild(el);
   const wt=weightForDate(selDate);
   el.className='ex-item ex-item-wt'+(wt!=null?' has-wt':'');
-  if(wt!=null)el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk">●</div><button type="button" class="ex-info wt-record-btn" id="dayWtDisplay" onclick="handleDayWtClick()" aria-label="Tap twice to remove weight"><div class="ex-name">${fmtWt(wt)} lbs</div><div class="ex-meta">Weight logged</div></button><div class="ex-arrow" aria-hidden="true"></div></div>`;
-  else el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" aria-hidden="true"></div><div class="ex-info wt-record-btn" onclick="openWeightModal()" role="button" tabindex="0"><div class="ex-name">Record Weight</div></div><div class="ex-arrow" aria-hidden="true"></div></div>`;
+  if(wt!=null)el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk">${li('check')}</div><button type="button" class="ex-info wt-record-btn" id="dayWtDisplay" onclick="handleDayWtClick()" aria-label="Tap twice to remove weight"><div class="ex-name">${fmtWt(wt)} lbs</div><div class="ex-meta">Weight logged</div></button><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
+  else el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" aria-hidden="true"></div><div class="ex-info wt-record-btn" onclick="openWeightModal()" role="button" tabindex="0"><div class="ex-name">Record Weight</div></div><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
+  refreshIcons(el);
+}
+const GOAL_RING_C=(2*Math.PI*14).toFixed(1);
+function setGoalRing(pct){
+  const fill=document.getElementById('goalBar');
+  if(!fill)return;
+  const dash=((pct/100)*+GOAL_RING_C).toFixed(1);
+  fill.setAttribute('stroke-dasharray',`${dash} ${GOAL_RING_C}`);
 }
 function updateWeightTrend(){
   const cur=weights.length?weights[weights.length-1].w:START_WT;
   const lost=Math.max(0,(START_WT-cur).toFixed(1));
-  const pct=Math.min(100,(lost/10*100)).toFixed(0);
+  const pct=Math.min(100,(lost/10*100));
   document.getElementById('progCurrent').textContent=cur+' lbs';
   document.getElementById('goalLost').textContent=lost;
-  document.getElementById('goalBar').style.width=pct+'%';
+  setGoalRing(pct);
   renderChart();
   renderRecordWeightAction();
 }
@@ -1080,19 +1115,22 @@ function updateWeightTrend(){
 function renderChart(){
   const c=document.getElementById('wtChart');if(!c)return;
   if(weights.length<2){c.innerHTML='<div class="empty">Log at least 2 weigh-ins to see your trend</div>';return}
-  const W=540,H=180,pad=30;
+  const H=180,padL=48,padR=12,padT=22,padB=22,plotM=6;
+  const W=Math.max(280,Math.round(c.clientWidth)||540);
   const vals=weights.map(e=>e.w);
   const min=Math.min(...vals),max=Math.max(...vals),range=(max-min)||1,n=weights.length;
-  const x=i=>pad+(i*(W-pad*2)/(n-1));
-  const y=v=>pad+((max-v)/range)*(H-pad*2);
+  const plotL=padL+plotM,plotR=W-padR-plotM,plotT=padT+plotM,plotB=H-padB-plotM;
+  const x=i=>plotL+(i*(plotR-plotL)/(n-1));
+  const y=v=>plotT+((max-v)/range)*(plotB-plotT);
+  const gridR=W-padR,yMax=y(max),yMin=y(min);
   const pts=weights.map((e,i)=>`${x(i).toFixed(1)},${y(e.w).toFixed(1)}`).join(' ');
-  const area=`${pad},${H-pad} ${pts} ${(W-pad)},${H-pad}`;
+  const area=`${plotL},${plotB} ${pts} ${plotR},${plotB}`;
   const dots=weights.map((e,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(e.w).toFixed(1)}" r="3" fill="#f0f0f0"/>`).join('');
-  c.innerHTML=`<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`+
-    `<line x1="${pad}" y1="${pad}" x2="${W-pad}" y2="${pad}" stroke="#444" stroke-width="1"/>`+
-    `<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#444" stroke-width="1"/>`+
-    `<text x="2" y="${pad+4}" fill="#888" font-size="11">${max.toFixed(1)}</text>`+
-    `<text x="2" y="${H-pad+4}" fill="#888" font-size="11">${min.toFixed(1)}</text>`+
+  c.innerHTML=`<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">`+
+    `<line x1="${plotL}" y1="${yMax}" x2="${gridR}" y2="${yMax}" stroke="#444" stroke-width="1"/>`+
+    `<line x1="${plotL}" y1="${yMin}" x2="${gridR}" y2="${yMin}" stroke="#444" stroke-width="1"/>`+
+    `<text x="0" y="${yMax}" text-anchor="start" dominant-baseline="middle" fill="#888" font-size="11">${max.toFixed(1)}</text>`+
+    `<text x="0" y="${yMin}" text-anchor="start" dominant-baseline="middle" fill="#888" font-size="11">${min.toFixed(1)}</text>`+
     `<polygon points="${area}" fill="#f0f0f0" opacity="0.06"/>`+
     `<polyline points="${pts}" fill="none" stroke="#f0f0f0" stroke-width="2"/>`+
     dots+`</svg>`
@@ -1114,17 +1152,17 @@ function updateHeader(){
 }
 
 /* ── Main render ── */
-function render(){updateHeader();renderCalendar();renderExercises();updateLostStat();updateWeightTrend()}
+function render(){updateHeader();renderCalendar();renderExercises();updateLostStat();updateWeightTrend();refreshIcons()}
 
 /* ── Backup & Restore ── */
 function exportData(){
   const backup=JSON.stringify({log,weights,setLog,programStart,exported:new Date().toLocaleString()});
   navigator.clipboard.writeText(backup).then(()=>{
-    showMsg('✓ Copied to clipboard — paste into Notes to save','#aaa')
+    showMsg('Copied to clipboard — paste into Notes to save','#aaa','check-circle')
   }).catch(()=>{
     const box=document.getElementById('importBox');
     box.value=backup;box.select();
-    showMsg('✓ Backup shown above — select all and copy it','#aaa')
+    showMsg('Backup shown above — select all and copy it','#aaa','check-circle')
   })
 }
 function importData(){
@@ -1139,13 +1177,17 @@ function importData(){
     if(d.programStart){programStart=d.programStart;localStorage.setItem('gains_start',programStart)}
     save();render();updateWeightTrend();
     document.getElementById('importBox').value='';
-    showMsg('✓ Data restored successfully','#aaa')
+    showMsg('Data restored successfully','#aaa','check-circle')
   }catch(e){showMsg('Could not read backup — check it was copied fully','#e55')}
 }
-function showMsg(txt,color){
+function showMsg(txt,color,icon){
   const el=document.getElementById('backupMsg');
-  el.textContent=txt;el.style.color=color;
-  setTimeout(()=>{el.textContent=''},4000)
+  el.style.color=color;
+  if(icon){
+    el.innerHTML=`<span class="backup-msg-row"><i data-lucide="${icon}"></i><span>${txt}</span></span>`;
+    refreshIcons(el);
+  }else el.textContent=txt;
+  setTimeout(()=>{el.textContent='';el.innerHTML=''},4000)
 }
 
 /* ── Init ── */
