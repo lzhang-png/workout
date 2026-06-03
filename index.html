@@ -144,7 +144,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-expand-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px 0;background:transparent;border:0;color:#888;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
 .cal-expand-btn:hover{color:#f0f0f0}
 .cal-expand-btn [data-lucide]{width:14px;height:14px;flex-shrink:0}
-.cal-day{display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;position:relative;z-index:1;transition:all .15s;min-height:0;min-width:0;padding:2px 1px;overflow:visible;width:100%;justify-self:center;align-self:center}
+.cal-day{display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;position:relative;z-index:1;transition:background .15s,opacity .15s,color .15s;min-height:0;min-width:0;padding:2px 1px;overflow:visible;width:100%;justify-self:center;align-self:center}
 .cal-day:not(.other){aspect-ratio:auto;height:auto;background:transparent;border:0;border-radius:0;flex-direction:column;gap:0}
 .cal-day:not(.other) .cal-ring{width:100%;max-width:100%;background:#2e2e2e;border-radius:50%}
 .cal-day.selected:not(.other){background:transparent}
@@ -180,7 +180,8 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-day.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#22c55e}
 .cal-day.selected.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#16a34a}
 @keyframes ringPop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
-.cal-day.celebrate .cal-ring{animation:ringPop .55s ease}
+.cal-day.celebrate .cal-ring{animation:ringPop .55s ease;transform-origin:center center}
+.cal-day.celebrate .cal-ring svg.cal-ring-track{transform-origin:center center}
 .confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden}
 /* outer element: outward burst (decelerating). inner element: gravity fall
    (accelerating). running together, gravity overlays the burst into an arc */
@@ -741,7 +742,10 @@ function updateCalDayClasses(cell,dateStr,selected,wt,prog){
   const today=dateKey(new Date());
   const idx=programDayIndex(dateStr);
   const inProg=idx>=0&&idx<PROGRAM_DAYS;
-  cell.className='cal-day'+(dateStr===today?' today':'')+(selected?' selected':'')+(prog&&prog.pct>=100?' complete':'')+(!inProg?' out':'');
+  cell.classList.toggle('today',dateStr===today);
+  cell.classList.toggle('selected',!!selected);
+  cell.classList.toggle('complete',!!(prog&&prog.pct>=100));
+  cell.classList.toggle('out',!inProg);
 }
 function captureRingSnapshot(){
   const m={};
