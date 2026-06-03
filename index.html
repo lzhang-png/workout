@@ -131,7 +131,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .ex-item-wt .wt-record-btn{display:block;width:100%;text-align:left;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
 .ex-item-wt .wt-record-btn.wt-record-armed .ex-name,.ex-item-wt .wt-record-btn.wt-record-armed .ex-meta{color:#f87171}
 .ex-item-wt:not(.has-wt) .ex-wt-chk{cursor:pointer}
-.ex-item-wt.has-wt .ex-wt-chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
+.ex-item-wt.has-wt .ex-wt-chk{cursor:pointer;background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .ex-item-wt:not(.has-wt) .ex-row{align-items:center;min-height:68px}
 .ex-item-wt .ex-arrow{visibility:hidden;pointer-events:none}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
@@ -1157,16 +1157,24 @@ function removeWeightForDate(dateStr){
   updateLostStat();
   updateWeightTrend();
 }
-function handleDayWtClick(){
-  const el=document.getElementById('dayWtDisplay');
-  if(!el)return;
-  if(el.dataset.arm==='1'){removeWeightForDate(selDate);return;}
-  el.dataset.arm='1';
-  const meta=el.querySelector('.ex-meta');
+function handleDayWtClick(e){
+  if(e)e.stopPropagation();
+  const row=document.getElementById('wtRecordAction');
+  if(!row||!row.classList.contains('has-wt'))return;
+  const btn=document.getElementById('dayWtDisplay');
+  if(row.dataset.arm==='1'){clearTimeout(handleDayWtClick._t);removeWeightForDate(selDate);return;}
+  row.dataset.arm='1';
+  const meta=btn?.querySelector('.ex-meta');
   if(meta)meta.textContent='Tap again to remove';
-  el.classList.add('wt-record-armed');
+  if(btn)btn.classList.add('wt-record-armed');
   clearTimeout(handleDayWtClick._t);
-  handleDayWtClick._t=setTimeout(renderRecordWeightAction,2500);
+  handleDayWtClick._t=setTimeout(disarmWtRemove,2500);
+}
+function disarmWtRemove(){
+  const row=document.getElementById('wtRecordAction');
+  if(row)delete row.dataset.arm;
+  clearTimeout(handleDayWtClick._t);
+  renderRecordWeightAction();
 }
 function updateLostStat(){
   const stat=document.getElementById('statLost');
@@ -1182,10 +1190,11 @@ function renderRecordWeightAction(){
   if(!listEl)return;
   let el=document.getElementById('wtRecordAction');
   if(!el){el=document.createElement('div');el.id='wtRecordAction'}
+  delete el.dataset.arm;
   listEl.appendChild(el);
   const wt=weightForDate(selDate);
   el.className='ex-item ex-item-wt'+(wt!=null?' has-wt':'');
-  if(wt!=null)el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk">${li('check')}</div><button type="button" class="ex-info wt-record-btn" id="dayWtDisplay" onclick="handleDayWtClick()" aria-label="Tap twice to remove weight"><div class="ex-name">${fmtWt(wt)} lbs</div><div class="ex-meta">Weight logged</div></button><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
+  if(wt!=null)el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" role="button" tabindex="0" aria-label="Tap twice to remove weight" onclick="handleDayWtClick(event)">${li('check')}</div><button type="button" class="ex-info wt-record-btn" id="dayWtDisplay" onclick="handleDayWtClick(event)" aria-label="Tap twice to remove weight"><div class="ex-name">${fmtWt(wt)} lbs</div><div class="ex-meta">Weight logged</div></button><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
   else el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" role="button" tabindex="0" aria-label="Record weight" onclick="openWeightModal()"></div><div class="ex-info wt-record-btn" onclick="openWeightModal()" role="button" tabindex="0"><div class="ex-name">Record Weight</div></div><div class="ex-arrow" aria-hidden="true">${li('chevron-right')}</div></div>`;
   refreshIcons(el);
 }
