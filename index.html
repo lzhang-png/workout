@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
 <title>GAINS – Fitness Tracker</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -23,17 +25,17 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 /* Exercise items */
 .ex-item{border:1.5px solid #444;border-bottom:none;overflow:hidden;cursor:pointer;background:transparent}
 .ex-item:last-child{border-bottom:1.5px solid #444}
-.ex-row{display:flex;align-items:center;gap:10px;padding:18px 14px}
-.chk{width:18px;height:18px;border:1.5px solid #aaa;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:900;transition:all .15s}
+.ex-row{display:flex;align-items:flex-start;gap:16px;padding:18px}
+.chk{--chk-size:calc(13px * 1.35 + 1px + 11px * 1.35);box-sizing:border-box;width:var(--chk-size);height:var(--chk-size);flex:0 0 var(--chk-size);border:1.5px solid #aaa;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;transition:all .15s}
 .ex-item.done .chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .ex-info{flex:1}
-.ex-name{font-size:13px;font-weight:600;color:#f0f0f0}
+.ex-name{font-size:13px;font-weight:600;line-height:1.35;color:#f0f0f0}
 .ex-item.done .ex-name{text-decoration:line-through;color:#666}
-.ex-meta{font-size:11px;color:#888;margin-top:1px}
-.ex-arrow{display:flex;align-items:center;justify-content:center;color:#666;transition:transform .15s}
+.ex-meta{font-size:11px;line-height:1.35;color:#888;margin-top:1px}
+.ex-arrow{align-self:center;display:flex;align-items:center;justify-content:center;color:#666;transition:transform .15s}
 .ex-arrow [data-lucide]{width:14px;height:14px}
 .ex-item.open .ex-arrow{transform:rotate(90deg)}
-.chk [data-lucide]{width:12px;height:12px}
+.chk [data-lucide]{width:18px;height:18px}
 .ex-item-wt:not(.has-wt) .ex-wt-chk [data-lucide]{color:#bbb}
 .ex-item-wt.has-wt .ex-wt-chk [data-lucide]{color:#1a1a1a}
 .demo-tip-label{display:inline-flex;align-items:center;gap:5px}
@@ -92,10 +94,10 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .goal-sub{font-size:11px;color:#aaa}
 
 /* Goal ring */
-.cal-trend-head{position:relative;display:flex;align-items:center;justify-content:flex-start;min-height:36px;padding-right:40px;margin-bottom:12px}
+.cal-trend-head{position:relative;display:flex;align-items:center;justify-content:flex-start;min-height:28px;padding-right:32px;margin-bottom:12px}
 .cal-goals{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:10px 20px;width:100%;font-size:14px;font-weight:600;color:#aaa;text-align:left}
 .cal-goal-metric{white-space:nowrap}
-.goal-ring{position:absolute;right:0;top:50%;transform:translateY(-50%);width:32px;height:32px;flex-shrink:0}
+.goal-ring{position:absolute;right:0;top:50%;transform:translateY(-50%);width:24px;height:24px;flex-shrink:0}
 .goal-ring svg{display:block;width:100%;height:100%}
 .goal-ring-fill{transition:stroke-dasharray .5s ease}
 
@@ -116,10 +118,12 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .chart-svg{display:block;width:100%;height:180px;overflow:visible}
 
 /* Calendar */
-#tab-workout > .card.cal-card{background:transparent;border:0;padding:0;margin-bottom:20px}
-#tab-workout > .card.ex-card{background:#333;border:0;padding:0;overflow:hidden;border-radius:32px}
+#tab-workout > .card.cal-card{background:transparent;border:0;padding:0;margin-bottom:12px}
+#tab-workout > .card.trend-card,#tab-workout > .card.ex-card{background:#333;border:0;overflow:hidden;border-radius:32px}
+#tab-workout > .card.trend-card{padding:18px;margin-bottom:16px}
+#tab-workout > .card.ex-card{padding:0;margin-bottom:16px}
 @supports (corner-shape: squircle){
-  #tab-workout > .card.ex-card{corner-shape:squircle}
+  #tab-workout > .card.trend-card,#tab-workout > .card.ex-card{corner-shape:squircle}
 }
 .ex-card .ex-item{border:0;border-bottom:1.5px solid #444}
 .ex-card .ex-item:last-child{border-bottom:0}
@@ -128,8 +132,7 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .ex-item-wt .wt-record-btn.wt-record-armed .ex-name,.ex-item-wt .wt-record-btn.wt-record-armed .ex-meta{color:#f87171}
 .ex-item-wt .ex-wt-chk{border-color:#888;color:#bbb}
 .ex-item-wt.has-wt .ex-wt-chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
-.ex-item-wt:not(.has-wt) .ex-row{min-height:68px}
-.ex-item-wt:not(.has-wt) .wt-record-btn{display:flex;align-items:center}
+.ex-item-wt:not(.has-wt) .ex-row{align-items:center;min-height:68px}
 .ex-item-wt .ex-arrow{visibility:hidden;pointer-events:none}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .cal-nav{background:transparent;border:0;color:#f0f0f0;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
@@ -174,8 +177,6 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-day.selected.complete .cal-ring svg.cal-ring-track circle:last-child{stroke:#16a34a}
 @keyframes ringPop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
 .cal-day.celebrate .cal-ring{animation:ringPop .55s ease}
-@keyframes dayGlow{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px #22c55e,0 0 14px rgba(34,197,94,.35)}}
-.cal-day.celebrate{animation:dayGlow .7s ease}
 .confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden}
 /* outer element: outward burst (decelerating). inner element: gravity fall
    (accelerating). running together, gravity overlays the burst into an arc */
@@ -183,16 +184,18 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .confetti-bit{display:block;width:100%;height:100%;border-radius:50%;opacity:0;will-change:transform,opacity;animation:cfFall 2.3s cubic-bezier(.3,0,.45,.95) forwards}
 @keyframes cfBurst{0%{transform:translate(-50%,-50%) scale(.6)}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.95)}}
 @keyframes cfFall{0%{transform:translate(0,0) rotate(0deg);opacity:0}12%{opacity:1}68%{opacity:1}100%{transform:translate(var(--drift),var(--fall)) rotate(var(--rot));opacity:0}}
-@media (prefers-reduced-motion:reduce){.cal-day.celebrate .cal-ring,.cal-day.celebrate,.confetti-piece,.confetti-bit{animation:none}.cal-ring svg.cal-ring-track,.cal-ring-fill{transition:none}.cal-ring svg.cal-ring-track.ring-enter,.cal-ring svg.cal-ring-track.ring-exit,.cal-ring.ring-gain,.cal-ring.ring-loss{animation:none}}
+@media (prefers-reduced-motion:reduce){.cal-day.celebrate .cal-ring,.confetti-piece,.confetti-bit{animation:none}.cal-ring svg.cal-ring-track,.cal-ring-fill{transition:none}.cal-ring svg.cal-ring-track.ring-enter,.cal-ring svg.cal-ring-track.ring-exit,.cal-ring.ring-gain,.cal-ring.ring-loss{animation:none}}
 .cal-footer{margin-top:12px;padding-top:10px;border-top:1px solid #444;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:#888}
 .cal-footer label{white-space:nowrap;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#aaa}
 .cal-footer input[type=date]{flex:1;min-width:0;width:auto;padding:6px 8px;font-size:16px;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0}
-.cal-trend{margin-top:24px;padding-top:0}
+.cal-trend{margin:0;padding:0}
 .cal-day-wt{display:block;width:100%;text-align:center;font-size:14px;font-weight:800;color:#f0f0f0;padding:8px 0 2px;letter-spacing:-.3px;background:transparent;border:0;cursor:pointer}
 .cal-day-wt.cal-day-wt-armed{color:#f87171}
 
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px}
-.header-main{flex:1;min-width:0}
+.header-main{flex:1;min-width:0;display:flex;align-items:center;gap:14px}
+.header-logo{width:32px;height:32px;flex-shrink:0;border-radius:7px}
+.header-main h1{flex:1;min-width:0}
 .settings-btn{background:transparent;border:0;color:#f0f0f0;width:36px;height:36px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
 </head>
@@ -200,6 +203,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
 <div class="container">
   <header>
     <div class="header-main">
+      <img src="favicon.png" alt="" class="header-logo" width="32" height="32">
       <h1><span id="hDate">Today</span> · Phase <span id="hPhase">1</span> · Week <span id="hWeek">1</span></h1>
     </div>
     <button class="settings-btn" onclick="openSettingsModal()" aria-label="Settings"><i data-lucide="settings"></i></button>
@@ -217,6 +221,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
       </div>
       <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
       <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="card trend-card">
       <div class="cal-trend">
         <div class="cal-trend-head">
           <div class="cal-goals">
@@ -225,7 +232,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
             <span class="cal-goal-metric"><span id="goalLost">0</span> lost</span>
           </div>
           <div class="goal-ring" aria-hidden="true">
-            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="#444" stroke-width="3"/><circle id="goalBar" class="goal-ring-fill" cx="18" cy="18" r="14" fill="none" stroke="#f0f0f0" stroke-width="3" stroke-linecap="round" transform="rotate(-90 18 18)" stroke-dasharray="0 88"/></svg>
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="#444" stroke-width="5"/><circle id="goalBar" class="goal-ring-fill" cx="18" cy="18" r="14" fill="none" stroke="#f0f0f0" stroke-width="5" stroke-linecap="round" transform="rotate(-90 18 18)" stroke-dasharray="0 88"/></svg>
           </div>
         </div>
         <div id="wtChart"><div class="empty">Log at least 2 weigh-ins to see your trend</div></div>
