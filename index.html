@@ -8,9 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{min-height:100vh;background:#2a2a2a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px}
 .container{max-width:600px;margin:0 auto}
-h1{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;text-transform:uppercase}
-.subtitle{font-size:10px;letter-spacing:3px;color:#888;text-transform:uppercase;margin-top:2px}
-.phase-info{font-size:12px;color:#aaa;margin-top:4px}
+h1{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.2}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
 .stat-card{border:1.5px solid #555;padding:14px;background:#333;margin-bottom:20px}
 .stat-label{font-size:10px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
@@ -23,12 +21,9 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .card-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#fff}
 
 /* Exercise items */
-.ex-item{border:1.5px solid #444;border-bottom:none;overflow:hidden;cursor:pointer;transition:border-color .15s;background:#2e2e2e}
+.ex-item{border:1.5px solid #444;border-bottom:none;overflow:hidden;cursor:pointer;background:transparent}
 .ex-item:last-child{border-bottom:1.5px solid #444}
-.ex-item.done{background:#303030}
-.ex-item:hover{border-color:#888}
-.ex-item:last-child:hover{border-bottom-color:#888}
-.ex-row{display:flex;align-items:center;gap:10px;padding:11px 12px}
+.ex-row{display:flex;align-items:center;gap:10px;padding:15px 12px}
 .chk{width:18px;height:18px;border:1.5px solid #aaa;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:900;transition:all .15s}
 .ex-item.done .chk{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .ex-info{flex:1}
@@ -41,30 +36,38 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 /* Demo panel */
 .demo-panel{display:none;border-top:1.5px solid #444;padding:14px;background:#272727}
 .ex-item.open .demo-panel{display:block}
+.demo-panel .set-row .set-inp,.demo-panel .set-num,.demo-panel .muscle-tag,.demo-panel .watch-btn,.demo-panel .step-num{border-radius:8px}
 .demo-muscles{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
 .muscle-tag{padding:3px 8px;font-size:10px;font-weight:700;background:#f0f0f0;color:#1a1a1a;text-transform:uppercase;letter-spacing:.5px}
 .demo-steps{margin-bottom:12px}
 .demo-step{display:flex;gap:10px;margin-bottom:7px;font-size:12px;line-height:1.5;color:#ccc}
 .step-num{width:18px;height:18px;background:#f0f0f0;color:#1a1a1a;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.demo-tip{border-left:3px solid #f0f0f0;padding:8px 12px;font-size:12px;color:#ccc;margin-bottom:12px;background:#303030}
+.demo-tip{padding:8px 12px;font-size:12px;color:#ccc;margin-bottom:12px;background:#303030;border-radius:8px}
 .demo-tip strong{display:block;margin-bottom:2px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#fff}
 .watch-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f0f0f0;border:none;color:#1a1a1a;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;text-transform:uppercase;letter-spacing:.5px}
 
 /* Weight log */
 .weight-input-row{display:flex;gap:8px;margin-bottom:12px}
 .weight-input-row input{flex:1;margin-bottom:0}
+.modal--sheet .weight-input-row input,.modal--sheet .weight-input-row .btn{border-radius:8px}
 .btn{background:#f0f0f0;border:1.5px solid #f0f0f0;color:#1a1a1a;padding:8px 14px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
 .btn.green{background:#f0f0f0;border-color:#f0f0f0;color:#1a1a1a}
 .btn.block{width:100%;margin-top:12px}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;padding:20px;align-items:flex-end;justify-content:center}
 .modal.open{display:flex}
+.modal--sheet{display:flex;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility .28s}
+.modal--sheet.open{opacity:1;visibility:visible;pointer-events:auto}
+.modal--sheet .modal-card{width:100%;max-width:600px;background:#333;border:0;padding:18px;max-height:85vh;overflow-x:hidden;overflow-y:auto;border-radius:32px;transform:translateY(calc(100% + 24px));transition:transform .35s cubic-bezier(.32,.72,0,1)}
+.modal--sheet.open .modal-card{transform:translateY(0)}
+@supports (corner-shape: squircle){
+  .modal--sheet .modal-card{corner-shape:squircle}
+}
 .modal-card{width:100%;max-width:600px;background:#333;border:1.5px solid #555;padding:18px;max-height:85vh;overflow-y:auto}
 .modal-close{width:100%;margin-top:12px;background:#555;border-color:#555;color:#f0f0f0}
-.weight-entry{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid #444;font-size:13px;color:#f0f0f0}
-.weight-entry:last-child{border-bottom:none}
-.weight-entry-meta{display:flex;align-items:center;gap:10px}
-.wt-del{background:transparent;border:1.5px solid #666;color:#aaa;width:24px;height:24px;padding:0;cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.wt-del:hover{border-color:#888;color:#f0f0f0}
+.modal--sheet .modal-close{background:#444;border-color:#444;border-radius:8px}
+.modal--sheet input[type=date],.modal--sheet textarea,.modal--sheet .btn{border-radius:8px}
+.modal--sheet input[type=date]::-webkit-calendar-picker-indicator,.cal-footer input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:1;filter:brightness(0) saturate(100%) invert(65%)}
+@media (prefers-reduced-motion:reduce){.modal--sheet,.modal--sheet .modal-card{transition:none}}
 .empty{text-align:center;padding:20px;color:#666;font-size:12px}
 
 /* Goals */
@@ -96,9 +99,23 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .chart-svg{display:block;width:100%;height:auto}
 
 /* Calendar */
-.cal-card{padding:14px;margin-bottom:16px}
+#tab-workout > .card.cal-card{background:transparent;border:0;padding:0;margin-bottom:20px}
+#tab-workout > .card.ex-card{background:#333;border:0;padding:0;overflow:hidden;border-radius:32px}
+@supports (corner-shape: squircle){
+  #tab-workout > .card.ex-card{corner-shape:squircle}
+}
+.ex-card .ex-item{border:0;border-bottom:1.5px solid #444}
+.ex-card .ex-item:last-child{border-bottom:0}
+.ex-item-wt{cursor:default}
+.ex-item-wt .wt-record-btn{display:block;width:100%;text-align:left;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+.ex-item-wt .wt-record-btn.wt-record-armed .ex-name,.ex-item-wt .wt-record-btn.wt-record-armed .ex-meta{color:#f87171}
+.ex-item-wt .ex-wt-chk{border-color:#888;color:#bbb;font-size:8px}
+.ex-item-wt.has-wt .ex-wt-chk{background:transparent}
+.ex-item-wt:not(.has-wt) .ex-row{min-height:60px}
+.ex-item-wt:not(.has-wt) .wt-record-btn{display:flex;align-items:center}
+.ex-item-wt .ex-arrow{visibility:hidden;pointer-events:none}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.cal-nav{background:#333;border:1.5px solid #555;color:#f0f0f0;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
+.cal-nav{background:transparent;border:0;color:#f0f0f0;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
 .cal-month{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#fff}
 .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;text-align:center;font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.5px}
 .cal-dow span{padding:4px 0}
@@ -153,24 +170,23 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-footer{margin-top:12px;padding-top:10px;border-top:1px solid #444;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:#888}
 .cal-footer label{white-space:nowrap;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#aaa}
 .cal-footer input[type=date]{flex:1;min-width:0;width:auto;padding:6px 8px;font-size:16px;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0}
-.cal-trend{margin-top:12px;padding-top:12px;border-top:1px solid #444}
-.cal-day-wt{text-align:center;font-size:14px;font-weight:800;color:#f0f0f0;padding:8px 0 2px;letter-spacing:-.3px}
+.cal-trend{margin-top:24px;padding-top:0}
+.cal-day-wt{display:block;width:100%;text-align:center;font-size:14px;font-weight:800;color:#f0f0f0;padding:8px 0 2px;letter-spacing:-.3px;background:transparent;border:0;cursor:pointer}
+.cal-day-wt.cal-day-wt-armed{color:#f87171}
 .cal-trend-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
 .cal-trend-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#aaa}
 .cal-goals{font-size:11px;color:#888;text-align:right}
 
-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px}
 .header-main{flex:1;min-width:0}
-.settings-btn{background:#333;border:1.5px solid #555;color:#f0f0f0;width:36px;height:36px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.settings-btn{background:transparent;border:0;color:#f0f0f0;width:36px;height:36px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <div class="header-main">
-      <h1>GAINS</h1>
-      <div class="subtitle">Fitness Tracker</div>
-      <div class="phase-info"><span id="hDate">Today</span> · Phase <span id="hPhase">1</span> · Week <span id="hWeek">1</span></div>
+      <h1><span id="hDate">Today</span> · Phase <span id="hPhase">1</span> · Week <span id="hWeek">1</span></h1>
     </div>
     <button class="settings-btn" onclick="openSettingsModal()" aria-label="Settings">⚙</button>
   </header>
@@ -194,21 +210,17 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
         </div>
         <div id="wtChart"><div class="empty">Log at least 2 weigh-ins to see your trend</div></div>
         <div class="prog-bar-wrap"><div class="prog-bar" id="goalBar" style="width:0%"></div></div>
-        <div id="wtRecordAction"></div>
       </div>
     </div>
 
     <!-- Exercise list -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title" id="dayTitle">Monday's Workout</div>
-      </div>
+    <div class="card ex-card">
       <div id="exList"></div>
     </div>
   </div>
 
   <!-- Weight modal -->
-  <div id="wtModal" class="modal" onclick="closeWeightModal(event)">
+  <div id="wtModal" class="modal modal--sheet" onclick="closeWeightModal(event)">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="card-header">
         <div class="card-title">Log Weight</div>
@@ -217,13 +229,12 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:12p
         <input type="number" id="wtInput" placeholder="Enter weight (lbs)" step="0.1">
         <button class="btn green" onclick="addWeight()">Save</button>
       </div>
-      <div id="wtList"><div class="empty">No entries yet — log your starting weight (160 lbs) to begin tracking!</div></div>
       <button class="btn modal-close" onclick="closeWeightModal()">Close</button>
     </div>
   </div>
 
   <!-- Settings modal -->
-  <div id="settingsModal" class="modal" onclick="closeSettingsModal(event)">
+  <div id="settingsModal" class="modal modal--sheet" onclick="closeSettingsModal(event)">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="card-header">
         <div class="card-title">Settings</div>
@@ -585,7 +596,13 @@ function load(){
 }
 
 /* ── Tabs ── */
-function openWeightModal(){document.getElementById('wtModal').classList.add('open');renderWeights();document.getElementById('wtInput').focus()}
+function openWeightModal(){
+  document.getElementById('wtModal').classList.add('open');
+  const inp=document.getElementById('wtInput');
+  const existing=weightForDate(selDate);
+  inp.value=existing!=null?existing:'';
+  inp.focus();
+}
 function closeWeightModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('wtModal').classList.remove('open')}
 function openSettingsModal(){document.getElementById('settingsModal').classList.add('open')}
 function closeSettingsModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('settingsModal').classList.remove('open')}
@@ -707,28 +724,63 @@ function syncRingAnimations(prev){
     }
   });
 }
+function bindCalendarDayCell(cell,dateStr,prog,wt){
+  const tips=[];
+  if(prog)tips.push(`${prog.done}/${prog.total} exercises`);
+  if(wt!=null)tips.push(`${fmtWt(wt)} lbs`);
+  if(tips.length)cell.title=tips.join(' · ');
+  else cell.removeAttribute('title');
+  cell.onclick=()=>selectDate(dateStr);
+}
+function findCalendarDayCell(dateStr){
+  let cell=document.querySelector(`.cal-day[data-date="${dateStr}"]`);
+  if(cell)return cell;
+  const d=parseDate(dateStr);
+  if(calView.y!==d.getFullYear()||calView.m!==d.getMonth())return null;
+  document.querySelectorAll('#calGrid .cal-day:not(.other)').forEach(c=>{
+    if(!cell&&c.textContent?.trim()===String(d.getDate()))cell=c;
+  });
+  return cell||null;
+}
 function patchCalendarDay(dateStr){
-  const cell=document.querySelector(`.cal-day[data-date="${dateStr}"]`);
-  if(!cell){renderCalendar();return;}
+  let cell=findCalendarDayCell(dateStr);
   const d=parseDate(dateStr).getDate();
   const selected=dateStr===selDate;
   const wt=weightForDate(dateStr);
   const prog=dayProgress(dateStr);
   const ringPct=prog&&prog.done>0?prog.pct:null;
   const uid=dateStr.replace(/-/g,'');
+  if(!cell){renderCalendar();return;}
   const prevFill=cell.querySelector('.cal-ring-fill');
+  const prevWtArc=cell.querySelector('.cal-wt-arc');
+  const prevWt=prevWtArc?prevWtArc.textContent.replace(/\s*lbs$/i,'').trim():'';
+  const nextWt=wt!=null?fmtWt(wt):'';
+  const wtChanged=(wt!=null)!==!!prevWtArc||prevWt!==nextWt;
   const prev={hasRing:!!prevFill,pct:prevFill?+prevFill.dataset.pct:0};
   updateCalDayClasses(cell,dateStr,selected,wt,prog);
+  if(wtChanged){
+    cell.dataset.date=dateStr;
+    cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,uid);
+    bindCalendarDayCell(cell,dateStr,prog,wt);
+    if(ringPct!=null&&!motionReduced())animateRingEnter(cell);
+    return;
+  }
   if(prev.hasRing&&!ringPct){
     if(motionReduced()){
+      cell.dataset.date=dateStr;
       cell.innerHTML=dayCellHtml(d,selected,wt,null,uid);
+      bindCalendarDayCell(cell,dateStr,prog,wt);
       return;
     }
-    animateRingExit(cell,()=>{cell.innerHTML=dayCellHtml(d,selected,wt,null,uid);});
+    animateRingExit(cell,()=>{
+      cell.innerHTML=dayCellHtml(d,selected,wt,null,uid);
+      bindCalendarDayCell(cell,dateStr,prog,wt);
+    });
     return;
   }
   if(!prev.hasRing&&ringPct!=null){
     cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,uid);
+    bindCalendarDayCell(cell,dateStr,prog,wt);
     if(!motionReduced())animateRingEnter(cell);
     return;
   }
@@ -736,9 +788,11 @@ function patchCalendarDay(dateStr){
     setRingColors(cell,ringPct,selected);
     if(!motionReduced()&&prev.pct!==ringPct)animateRingProgress(cell,ringPct,prev.pct);
     else setRingDash(cell,ringPct,false);
+    bindCalendarDayCell(cell,dateStr,prog,wt);
     return;
   }
   cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,uid);
+  bindCalendarDayCell(cell,dateStr,prog,wt);
 }
 function ringHtml(dayNum,pct,selected,wt,uid){
   const done=pct>=100;
@@ -870,9 +924,7 @@ function renderCalendar(){
       cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,ds.replace(/-/g,''));
       const tips=[];
       if(prog)tips.push(`${prog.done}/${prog.total} exercises`);
-      if(wt!=null)tips.push(`${fmtWt(wt)} lbs`);
-      if(tips.length)cell.title=tips.join(' · ');
-      cell.onclick=()=>selectDate(ds);
+      bindCalendarDayCell(cell,ds,prog,wt);
     }else{
       cell.textContent=d;
     }
@@ -894,17 +946,14 @@ function logKey(i){return `${selDate}_${i}`}
 function renderExercises(){
   const idx=programDayIndex(selDate);
   const pw=getPhaseWeek(idx);
-  const titleEl=document.getElementById('dayTitle');
   const listEl=document.getElementById('exList');
   if(!pw){
-    titleEl.textContent=idx<0?'Before program start':'Program complete';
     listEl.innerHTML='<div class="empty">'+(idx<0?'Pick a date on or after your program start.':'Congrats — you finished the 8-week plan!')+'</div>';
+    renderRecordWeightAction();
     return;
   }
   const exs=(PLAN[pw.phase]||{})[selDay]||[];
-  const wt=weightForDate(selDate);
-  titleEl.textContent=fmtDate(selDate)+' · '+selDay+(wt!=null?` · ${fmtWt(wt)} lbs`:'');
-  if(!exs.length){listEl.innerHTML='<div class="empty">No workout today</div>';return}
+  if(!exs.length){listEl.innerHTML='<div class="empty">No workout today</div>';renderRecordWeightAction();return}
   listEl.innerHTML='';
   exs.forEach((ex,i)=>{
     const key=logKey(i),isDone=!!log[key];
@@ -943,7 +992,8 @@ function renderExercises(){
         <a class="watch-btn" href="https://www.youtube.com/results?search_query=${dm.yt}" target="_blank">▶ Watch Demo on YouTube</a>
       </div>`;
     listEl.appendChild(item)
-  })
+  });
+  renderRecordWeightAction();
 }
 
 function toggle(e,i){e.stopPropagation();const key=logKey(i);const wasComplete=isDayComplete(selDate);log[key]=!log[key];save();const nowComplete=isDayComplete(selDate);patchCalendarDay(selDate);renderExercises();updateHeader();updateLostStat();updateWeightTrend();if(log[key]&&!wasComplete&&nowComplete)celebrateDay(selDate)}
@@ -977,21 +1027,37 @@ function logSet(key,n,field,val){
 function addWeight(){
   const v=parseFloat(document.getElementById('wtInput').value);
   if(!v||v<50||v>500)return;
-  weights.push({date:new Date().toLocaleDateString(),w:v,dateKey:selDate,phase,week:weekKey});
-  document.getElementById('wtInput').value='';save();renderWeights();render()
+  const entry={date:new Date().toLocaleDateString(),w:v,dateKey:selDate,phase,week:weekKey};
+  const idx=weights.findIndex(e=>e.dateKey===selDate);
+  if(idx>=0)weights[idx]=entry;
+  else weights.push(entry);
+  document.getElementById('wtInput').value='';
+  save();
+  closeWeightModal();
+  patchCalendarDay(selDate);
+  if(!document.querySelector(`.cal-day[data-date="${selDate}"] .cal-wt-arc`))renderCalendar();
+  updateLostStat();
+  updateWeightTrend();
 }
-function weightEntryLabel(e){
-  return e.date||(e.dateKey?fmtDate(e.dateKey):'—');
-}
-function renderWeights(){
-  const c=document.getElementById('wtList');
-  if(!weights.length){c.innerHTML='<div class="empty">No entries yet — log your starting weight (160 lbs) to begin!</div>';return}
-  c.innerHTML=[...weights].map((e,i)=>({e,i})).reverse().map(({e,i})=>`<div class="weight-entry"><span>${weightEntryLabel(e)}</span><span class="weight-entry-meta"><span>${e.w} lbs</span><button type="button" class="wt-del" onclick="removeWeight(${i})" aria-label="Remove entry">×</button></span></div>`).join('')
-}
-function removeWeight(idx){
-  if(idx<0||idx>=weights.length)return;
+function removeWeightForDate(dateStr){
+  const idx=weights.findIndex(e=>e.dateKey===dateStr);
+  if(idx<0)return;
   weights.splice(idx,1);
-  save();renderWeights();render();
+  save();
+  patchCalendarDay(dateStr);
+  updateLostStat();
+  updateWeightTrend();
+}
+function handleDayWtClick(){
+  const el=document.getElementById('dayWtDisplay');
+  if(!el)return;
+  if(el.dataset.arm==='1'){removeWeightForDate(selDate);return;}
+  el.dataset.arm='1';
+  const meta=el.querySelector('.ex-meta');
+  if(meta)meta.textContent='Tap again to remove';
+  el.classList.add('wt-record-armed');
+  clearTimeout(handleDayWtClick._t);
+  handleDayWtClick._t=setTimeout(renderRecordWeightAction,2500);
 }
 function updateLostStat(){
   const stat=document.getElementById('statLost');
@@ -1003,11 +1069,15 @@ function updateLostStat(){
 
 /* ── Weight trend (in calendar) ── */
 function renderRecordWeightAction(){
-  const el=document.getElementById('wtRecordAction');
-  if(!el)return;
+  const listEl=document.getElementById('exList');
+  if(!listEl)return;
+  let el=document.getElementById('wtRecordAction');
+  if(!el){el=document.createElement('div');el.id='wtRecordAction'}
+  listEl.appendChild(el);
   const wt=weightForDate(selDate);
-  if(wt!=null)el.innerHTML=`<div class="cal-day-wt">${fmtWt(wt)} lbs</div>`;
-  else el.innerHTML=`<button class="btn block" onclick="openWeightModal()">Record Weight</button>`;
+  el.className='ex-item ex-item-wt'+(wt!=null?' has-wt':'');
+  if(wt!=null)el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk">●</div><button type="button" class="ex-info wt-record-btn" id="dayWtDisplay" onclick="handleDayWtClick()" aria-label="Tap twice to remove weight"><div class="ex-name">${fmtWt(wt)} lbs</div><div class="ex-meta">Weight logged</div></button><div class="ex-arrow" aria-hidden="true"></div></div>`;
+  else el.innerHTML=`<div class="ex-row"><div class="chk ex-wt-chk" aria-hidden="true"></div><div class="ex-info wt-record-btn" onclick="openWeightModal()" role="button" tabindex="0"><div class="ex-name">Record Weight</div></div><div class="ex-arrow" aria-hidden="true"></div></div>`;
 }
 function updateWeightTrend(){
   const cur=weights.length?weights[weights.length-1].w:START_WT;
@@ -1081,7 +1151,7 @@ function importData(){
     if(d.weights)weights=d.weights;
     if(d.setLog)setLog=d.setLog;
     if(d.programStart){programStart=d.programStart;localStorage.setItem('gains_start',programStart)}
-    save();render();renderWeights();updateWeightTrend();
+    save();render();updateWeightTrend();
     document.getElementById('importBox').value='';
     showMsg('✓ Data restored successfully','#aaa')
   }catch(e){showMsg('Could not read backup — check it was copied fully','#e55')}
