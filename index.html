@@ -140,6 +140,10 @@ label.lbl{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;
 .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:12px 0 10px;text-align:center;font-size:9px;color:#777;text-transform:uppercase;letter-spacing:.5px}
 .cal-dow span{padding:6px 0}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;overflow:visible;position:relative;padding:4px 0;align-items:start}
+.cal-grid.cal-collapsed .cal-day:not(.cal-week-visible){display:none}
+.cal-expand-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px 0;background:transparent;border:0;color:#888;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
+.cal-expand-btn:hover{color:#f0f0f0}
+.cal-expand-btn [data-lucide]{width:14px;height:14px;flex-shrink:0}
 .cal-day{display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;position:relative;z-index:1;transition:all .15s;min-height:0;min-width:0;padding:2px 1px;overflow:visible;width:100%;justify-self:center;align-self:center}
 .cal-day:not(.other){aspect-ratio:auto;height:auto;background:transparent;border:0;border-radius:0;flex-direction:column;gap:0}
 .cal-day:not(.other) .cal-ring{width:100%;max-width:100%;background:#2e2e2e;border-radius:50%}
@@ -220,7 +224,11 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
         <button class="cal-nav" onclick="calNext()" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
       </div>
       <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
-      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-grid cal-collapsed" id="calGrid"></div>
+      <button type="button" class="cal-expand-btn" id="calExpandBtn" onclick="toggleCalExpand()" aria-expanded="false">
+        <span id="calExpandLabel">Show full month</span>
+        <i data-lucide="chevron-down"></i>
+      </button>
     </div>
 
     <!-- Exercise list -->
@@ -234,7 +242,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
           <div class="cal-goals">
             <span class="cal-goal-metric" id="progCurrent">160 lbs</span>
             <span class="cal-goal-metric">–10 lbs goal</span>
-            <span class="cal-goal-metric"><span id="goalLost">0</span> lost</span>
+            <span class="cal-goal-metric"><span id="goalLost">0</span> lbs lost</span>
           </div>
           <div class="goal-ring" aria-hidden="true">
             <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="#444" stroke-width="5"/><circle id="goalBar" class="goal-ring-fill" cx="18" cy="18" r="14" fill="none" stroke="#f0f0f0" stroke-width="5" stroke-linecap="round" transform="rotate(-90 18 18)" stroke-dasharray="0 88"/></svg>
@@ -295,6 +303,8 @@ const PROGRAM_DAYS = 56;
 let phase = 1, weekKey = 1, selDay = 'Monday';
 let selDate = '', programStart = '';
 let calView = { y: 0, m: 0 };
+let calExpanded = false;
+let calWeekOverride = null;
 let log = {}, weights = [], setLog = {};
 
 /* ── Date helpers ── */
@@ -893,6 +903,8 @@ function otherDayHtml(dayNum){
 }
 function selectDate(dateStr){
   selDate=dateStr;syncPhaseFromDate();
+  calWeekOverride=null;
+  if(!calExpanded){renderCalendar();updateHeader();renderExercises();updateLostStat();updateWeightTrend();return}
   document.querySelectorAll('.cal-day[data-date]').forEach(cell=>{
     const selected=cell.dataset.date===selDate;
     cell.classList.toggle('selected',selected);
@@ -905,15 +917,79 @@ function onStartChange(val){
   if(!val)return;
   programStart=val;save();renderCalendar();render();
 }
+function calMonthMeta(y,m){
+  const first=new Date(y,m,1);
+  const startPad=(first.getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  return {startPad,daysInMonth,maxWeek:Math.ceil((startPad+daysInMonth)/7)-1};
+}
+function visibleCalWeek(startPad,y,m,maxWeek){
+  const w=calWeekOverride!=null?calWeekOverride:activeCalWeek(startPad,y,m);
+  return Math.min(Math.max(0,w),maxWeek);
+}
 function calPrev(){
-  calView.m--;
-  if(calView.m<0){calView.m=11;calView.y--}
+  if(calExpanded){
+    calView.m--;
+    if(calView.m<0){calView.m=11;calView.y--}
+    calWeekOverride=null;
+    renderCalendar();
+    return;
+  }
+  const meta=calMonthMeta(calView.y,calView.m);
+  const w=visibleCalWeek(meta.startPad,calView.y,calView.m,meta.maxWeek);
+  if(w>0)calWeekOverride=w-1;
+  else{
+    calView.m--;
+    if(calView.m<0){calView.m=11;calView.y--}
+    calWeekOverride=calMonthMeta(calView.y,calView.m).maxWeek;
+  }
   renderCalendar();
 }
 function calNext(){
-  calView.m++;
-  if(calView.m>11){calView.m=0;calView.y++}
+  if(calExpanded){
+    calView.m++;
+    if(calView.m>11){calView.m=0;calView.y++}
+    calWeekOverride=null;
+    renderCalendar();
+    return;
+  }
+  const meta=calMonthMeta(calView.y,calView.m);
+  const w=visibleCalWeek(meta.startPad,calView.y,calView.m,meta.maxWeek);
+  if(w<meta.maxWeek)calWeekOverride=w+1;
+  else{
+    calView.m++;
+    if(calView.m>11){calView.m=0;calView.y++}
+    calWeekOverride=0;
+  }
   renderCalendar();
+}
+function activeCalWeek(startPad,y,m){
+  let day=null;
+  if(selDate){
+    const p=parseDate(selDate);
+    if(p.getFullYear()===y&&p.getMonth()===m)day=p.getDate();
+  }
+  if(day==null){
+    const t=new Date();
+    if(t.getFullYear()===y&&t.getMonth()===m)day=t.getDate();
+  }
+  if(day==null)return 0;
+  return Math.floor((startPad+day-1)/7);
+}
+function toggleCalExpand(){
+  calExpanded=!calExpanded;
+  if(calExpanded)calWeekOverride=null;
+  renderCalendar();
+  refreshIcons(document.querySelector('.cal-card'));
+}
+function updateCalExpandBtn(){
+  const btn=document.getElementById('calExpandBtn');
+  if(!btn)return;
+  const label=document.getElementById('calExpandLabel');
+  const icon=btn.querySelector('[data-lucide]');
+  btn.setAttribute('aria-expanded',calExpanded?'true':'false');
+  if(label)label.textContent=calExpanded?'Show week':'Show full month';
+  if(icon)icon.setAttribute('data-lucide',calExpanded?'chevron-up':'chevron-down');
 }
 function renderCalendar(){
   const prevRing=captureRingSnapshot();
@@ -926,12 +1002,21 @@ function renderCalendar(){
   const prevDays=new Date(calView.y,calView.m,0).getDate();
   monthEl.textContent=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
   grid.innerHTML='';
+  grid.classList.toggle('cal-collapsed',!calExpanded);
+  const maxWeek=Math.ceil((startPad+daysInMonth)/7)-1;
+  const activeWeek=calExpanded?-1:visibleCalWeek(startPad,calView.y,calView.m,maxWeek);
+  let cellIdx=0;
   const today=dateKey(new Date());
   const wtMap=getWeightMap();
+  const markWeek=cell=>{
+    if(!calExpanded&&Math.floor(cellIdx/7)===activeWeek)cell.classList.add('cal-week-visible');
+    cellIdx++;
+  };
   for(let i=0;i<startPad;i++){
     const cell=document.createElement('div');
     cell.className='cal-day other';
     cell.innerHTML=otherDayHtml(prevDays-startPad+i+1);
+    markWeek(cell);
     grid.appendChild(cell);
   }
   for(let d=1;d<=daysInMonth;d++){
@@ -947,6 +1032,7 @@ function renderCalendar(){
     const ringPct=inProg&&prog&&prog.done>0?prog.pct:null;
     cell.innerHTML=dayCellHtml(d,selected,wt,ringPct,ds.replace(/-/g,''));
     bindCalendarDayCell(cell,ds,prog,wt);
+    markWeek(cell);
     grid.appendChild(cell);
   }
   const total=startPad+daysInMonth;
@@ -954,9 +1040,12 @@ function renderCalendar(){
     const cell=document.createElement('div');
     cell.className='cal-day other';
     cell.innerHTML=otherDayHtml(i-total+1);
+    markWeek(cell);
     grid.appendChild(cell);
   }
+  updateCalExpandBtn();
   requestAnimationFrame(()=>syncRingAnimations(prevRing));
+  refreshIcons(document.getElementById('calExpandBtn'));
 }
 
 /* ── Exercises ── */
