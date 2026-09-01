@@ -4,8 +4,13 @@ A single-page fitness guide and workout tracker with phase-based plans, exercise
 
 ## Live site
 
-https://lzhang-png.github.io/workout/
+- Solo (original): https://lzhang-png.github.io/workout/
+- Couple (Mon / Wed / weekend): https://lzhang-png.github.io/workout/couple.html
+
+## Couple mode
+
+Open `couple.html` to track two people side by side. Switch between You and Partner (names editable in Settings). Workouts are Mon (Chest + Back), Wed (Arms), and weekend (Legs). Progress is stored separately per person in the browser.
 
 ## Usage
 
-Open `index.html` in any browser. Progress is saved in your browser’s local storage.
+Open `index.html` or `couple.html` in any browser. Progress is saved in your browser’s local storage.

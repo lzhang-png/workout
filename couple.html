@@ -5,12 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="favicon.png">
-<title>GAINS – Fitness Tracker</title>
+<title>GAINS – Couple Tracker</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{min-height:100vh;background:#2a2a2a;color:#f0f0f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px}
 .container{max-width:600px;margin:0 auto}
 h1{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.2}
+.person-switch{display:flex;gap:6px;margin-bottom:16px;padding:4px;background:#333;border-radius:12px}
+.person-btn{flex:1;border:0;background:transparent;color:#888;padding:10px 12px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border-radius:9px;transition:background .15s,color .15s}
+.person-btn.active{background:#f0f0f0;color:#1a1a1a}
+.day-focus{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#aaa;margin:-8px 0 14px;padding:0 2px}
+.day-focus strong{color:#f0f0f0;font-weight:800}
+.person-edit-row{display:grid;grid-template-columns:1fr 90px;gap:8px;margin-bottom:10px;align-items:end}
+.person-edit-row input{margin:0}
+.solo-link{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#888;text-decoration:none;margin-top:4px}
+.solo-link:hover{color:#f0f0f0}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
 .stat-card{border:1.5px solid #555;padding:14px;background:#333;margin-bottom:20px}
 .stat-label{font-size:10px;color:#aaa;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
@@ -214,6 +223,12 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
     <button class="settings-btn" onclick="openSettingsModal()" aria-label="Settings"><i data-lucide="settings"></i></button>
   </header>
 
+  <div class="person-switch" role="tablist" aria-label="Whose progress">
+    <button type="button" class="person-btn active" id="personBtn0" role="tab" aria-selected="true" onclick="switchPerson(0)"></button>
+    <button type="button" class="person-btn" id="personBtn1" role="tab" aria-selected="false" onclick="switchPerson(1)"></button>
+  </div>
+  <div class="day-focus" id="dayFocus"></div>
+
   <!-- Home -->
   <div id="tab-workout">
 
@@ -278,16 +293,35 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
         <label for="progStart">Program start</label>
         <input type="date" id="progStart" onchange="onStartChange(this.value)">
       </div>
+      <div class="card-title" style="margin-bottom:8px">People</div>
+      <div class="person-edit-row">
+        <div>
+          <label class="lbl" for="name0">Person 1 name</label>
+          <input type="text" id="name0" maxlength="20" onchange="savePersonMeta()">
+        </div>
+        <div>
+          <label class="lbl" for="startWt0">Start lbs</label>
+          <input type="number" id="startWt0" step="0.1" min="50" max="500" onchange="savePersonMeta()">
+        </div>
+      </div>
+      <div class="person-edit-row" style="margin-bottom:18px">
+        <div>
+          <label class="lbl" for="name1">Person 2 name</label>
+          <input type="text" id="name1" maxlength="20" onchange="savePersonMeta()">
+        </div>
+        <div>
+          <label class="lbl" for="startWt1">Start lbs</label>
+          <input type="number" id="startWt1" step="0.1" min="50" max="500" onchange="savePersonMeta()">
+        </div>
+      </div>
       <div class="card-title" style="margin-bottom:4px">Backup &amp; Restore</div>
-      <div style="font-size:11px;color:#888;margin-bottom:14px">Export your data to Notes or Messages. Paste it back any time to restore.</div>
+      <div style="font-size:11px;color:#888;margin-bottom:14px">Exports both people’s progress. Paste it back any time to restore.</div>
       <button class="btn" style="width:100%;margin-bottom:8px" onclick="exportData()"><i data-lucide="copy"></i> Export — Copy Backup</button>
       <textarea id="importBox" placeholder="Paste backup here to restore..." style="width:100%;background:#2e2e2e;border:1.5px solid #555;color:#f0f0f0;font-size:16px;padding:10px;resize:vertical;min-height:70px;font-family:monospace;margin-bottom:8px"></textarea>
       <button class="btn" style="width:100%;background:#555;border-color:#555;color:#f0f0f0;margin-bottom:8px" onclick="importData()"><i data-lucide="upload"></i> Restore from Backup</button>
       <div id="backupMsg" style="font-size:11px;text-align:center;margin-top:8px;min-height:16px;color:#aaa"></div>
+      <a class="solo-link" href="index.html"><i data-lucide="arrow-left"></i> Back to solo tracker</a>
       <button class="btn modal-close" onclick="closeSettingsModal()"><i data-lucide="x"></i> Close</button>
-      <div style="text-align:center;margin-top:14px">
-        <a href="couple.html" style="font-size:11px;color:#888;text-decoration:none;letter-spacing:.3px">Couple tracker →</a>
-      </div>
     </div>
   </div>
 </div>
@@ -302,14 +336,28 @@ function refreshIcons(root){
 }
 const li=n=>`<i data-lucide="${n}"></i>`;
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-const START_WT = 160;
 const PROGRAM_DAYS = 56;
+const STORAGE_PREFIX = 'gains_couple';
+const DEFAULT_PEOPLE = [
+  {id:'you', name:'You', startWt:160},
+  {id:'partner', name:'Partner', startWt:140}
+];
+const DAY_FOCUS = {
+  Monday:'Chest + Back',
+  Wednesday:'Arms',
+  Saturday:'Legs',
+  Sunday:'Legs'
+};
+let people = DEFAULT_PEOPLE.map(p=>({...p}));
+let personIdx = 0;
 let phase = 1, weekKey = 1, selDay = 'Monday';
 let selDate = '', programStart = '';
 let calView = { y: 0, m: 0 };
 let calExpanded = false;
 let calWeekOverride = null;
 let log = {}, weights = [], setLog = {};
+function activePerson(){return people[personIdx]}
+function startWt(){return Number(activePerson().startWt)||160}
 
 /* ── Date helpers ── */
 function dateKey(d){
@@ -545,100 +593,172 @@ const DEMOS = {
   }
 };
 
-/* Workout plan data */
+/* Workout plan — Mon Chest+Back · Wed Arms · Weekend Legs */
+const REST=[{n:'Rest Day',s:1,r:'Full recovery'}];
 const PLAN = {
   1:{
     Monday:[
       {n:'Push-Up (elevated)',s:3,r:'8–12 reps'},
       {n:'Banded Chest Press',s:3,r:'12–15 reps'},
+      {n:'Banded Rows',s:3,r:'12–15 reps'},
+      {n:'Push-Up to Down-Dog',s:3,r:'8–10 reps'},
+      {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
+    ],
+    Tuesday:REST,
+    Wednesday:[
       {n:'Banded Shoulder Press',s:3,r:'10–12 reps'},
       {n:'Banded Lateral Raise',s:2,r:'12–15 reps'},
-      {n:'Tricep Dips',s:2,r:'8–10 reps'}
+      {n:'Tricep Dips',s:2,r:'8–10 reps'},
+      {n:'Banded Bicep Curls',s:3,r:'12–15 reps'},
+      {n:'Banded Face Pulls',s:3,r:'15 reps'}
     ],
-    Tuesday:[
-      {n:'Stationary Bike',s:1,r:'20 min steady'},
-      {n:'Yoga/Stretching',s:1,r:'10 min'}
-    ],
-    Wednesday:[
+    Thursday:REST,
+    Friday:REST,
+    Saturday:[
       {n:'Banded Squats',s:3,r:'12–15 reps'},
       {n:'Banded Romanian Deadlifts',s:3,r:'10–12 reps'},
       {n:'Banded Lateral Walks',s:3,r:'12 steps each way'},
       {n:'Glute Bridges (single leg)',s:3,r:'8 reps each leg'},
-      {n:'Dead Bug',s:3,r:'10 reps each side'}
+      {n:'Dead Bug',s:3,r:'10 reps each side'},
+      {n:'Plank (on handles)',s:3,r:'30–45 sec'}
     ],
-    Thursday:[
-      {n:'Banded Rows',s:3,r:'12–15 reps'},
-      {n:'Push-Up to Down-Dog',s:3,r:'8–10 reps'},
-      {n:'Banded Face Pulls',s:3,r:'15 reps'},
-      {n:'Banded Bicep Curls',s:3,r:'12–15 reps'},
-      {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
-    ],
-    Friday:[
-      {n:'Banded Good Mornings',s:3,r:'12–15 reps'},
-      {n:'Single-Leg Glute Bridges',s:3,r:'10 reps each leg'},
-      {n:'Cossack Squats',s:3,r:'8 reps each side'},
-      {n:'Plank (on handles)',s:3,r:'30–45 sec'},
-      {n:'Dead Bug Series',s:3,r:'12 reps'},
-      {n:'Bicycle Crunches',s:2,r:'15 reps'}
-    ],
-    Saturday:[{n:'Stationary Bike',s:1,r:'30 min steady'}],
-    Sunday:[{n:'Rest Day',s:1,r:'Full recovery'}]
+    Sunday:[
+      {n:'Banded Squats',s:3,r:'12–15 reps'},
+      {n:'Banded Romanian Deadlifts',s:3,r:'10–12 reps'},
+      {n:'Banded Lateral Walks',s:3,r:'12 steps each way'},
+      {n:'Glute Bridges (single leg)',s:3,r:'8 reps each leg'},
+      {n:'Dead Bug',s:3,r:'10 reps each side'},
+      {n:'Plank (on handles)',s:3,r:'30–45 sec'}
+    ]
   },
   2:{
     Monday:[
       {n:'Push-Up (elevated)',s:5,r:'8–10 reps (weighted)'},
       {n:'Banded Chest Press',s:4,r:'12–15 reps'},
+      {n:'Banded Rows',s:4,r:'10–12 reps (heavy)'},
+      {n:'Banded Lat Pulldowns',s:3,r:'12–15 reps'},
+      {n:'Banded Face Pulls',s:3,r:'20 reps'},
+      {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
+    ],
+    Tuesday:REST,
+    Wednesday:[
       {n:'Banded Shoulder Press',s:4,r:'8–10 reps'},
       {n:'Banded Lateral Raise',s:3,r:'12–15 reps'},
-      {n:'Tricep Dips',s:3,r:'12–15 reps (weighted)'}
+      {n:'Tricep Dips',s:3,r:'12–15 reps (weighted)'},
+      {n:'Banded Bicep Curls',s:4,r:'10–15 reps'},
+      {n:'Overhead Tricep Extension',s:3,r:'12–15 reps'},
+      {n:'Banded Face Pulls',s:3,r:'15 reps'}
     ],
-    Tuesday:[
-      {n:'Stationary Bike',s:1,r:'30 min'},
-      {n:'Yoga/Stretching',s:1,r:'10 min'}
-    ],
-    Wednesday:[
+    Thursday:REST,
+    Friday:REST,
+    Saturday:[
       {n:'Banded Squats',s:5,r:'6–10 reps (heavy)'},
       {n:'Banded Romanian Deadlifts',s:4,r:'8–10 reps'},
       {n:'Banded Step-Ups',s:3,r:'10 reps each leg'},
       {n:'Banded Hamstring Curls',s:3,r:'12–15 reps'},
+      {n:'Bulgarian Split Squats',s:3,r:'8–10 reps each leg'},
       {n:'Single-Leg Glute Bridges',s:3,r:'10–12 reps each'},
-      {n:'Dead Bug',s:3,r:'15 reps'}
-    ],
-    Thursday:[
-      {n:'Banded Rows',s:4,r:'10–12 reps (heavy)'},
-      {n:'Banded Lat Pulldowns',s:3,r:'12–15 reps'},
-      {n:'Banded Face Pulls',s:3,r:'20 reps'},
-      {n:'Banded Bicep Curls',s:4,r:'10–15 reps'},
-      {n:'Overhead Tricep Extension',s:3,r:'12–15 reps'},
-      {n:'Plank (on handles)',s:3,r:'45–60 sec'}
-    ],
-    Friday:[
-      {n:'Bulgarian Split Squats',s:4,r:'8–10 reps each leg'},
-      {n:'Banded Sumo Deadlifts',s:3,r:'10–12 reps'},
-      {n:'Banded Lateral Walks',s:4,r:'15 steps each'},
-      {n:'Banded Romanian Deadlifts',s:3,r:'12 reps'},
-      {n:'Plank with Shoulder Taps',s:3,r:'40 taps'},
-      {n:'Pallof Press',s:3,r:'12 reps each side'},
       {n:'Hollow Body Hold',s:3,r:'45–60 sec'}
     ],
-    Saturday:[{n:'Stationary Bike',s:1,r:'8× (45s hard / 90s easy)'}],
-    Sunday:[{n:'Rest Day',s:1,r:'Full recovery'}]
+    Sunday:[
+      {n:'Banded Squats',s:5,r:'6–10 reps (heavy)'},
+      {n:'Banded Romanian Deadlifts',s:4,r:'8–10 reps'},
+      {n:'Banded Step-Ups',s:3,r:'10 reps each leg'},
+      {n:'Banded Hamstring Curls',s:3,r:'12–15 reps'},
+      {n:'Bulgarian Split Squats',s:3,r:'8–10 reps each leg'},
+      {n:'Single-Leg Glute Bridges',s:3,r:'10–12 reps each'},
+      {n:'Hollow Body Hold',s:3,r:'45–60 sec'}
+    ]
   }
 };
 
-/* ── Storage ── */
-function save(){localStorage.setItem('gains_log',JSON.stringify(log));localStorage.setItem('gains_wt',JSON.stringify(weights));localStorage.setItem('gains_set',JSON.stringify(setLog));localStorage.setItem('gains_start',programStart)}
-function load(){
+/* ── Storage (per person) ── */
+function personKey(suffix){return `${STORAGE_PREFIX}_${activePerson().id}_${suffix}`}
+function savePeopleMeta(){
+  localStorage.setItem(`${STORAGE_PREFIX}_people`,JSON.stringify(people));
+  localStorage.setItem(`${STORAGE_PREFIX}_person`,String(personIdx));
+  localStorage.setItem(`${STORAGE_PREFIX}_start`,programStart);
+}
+function save(){
+  localStorage.setItem(personKey('log'),JSON.stringify(log));
+  localStorage.setItem(personKey('wt'),JSON.stringify(weights));
+  localStorage.setItem(personKey('set'),JSON.stringify(setLog));
+  savePeopleMeta();
+}
+function loadPersonData(){
+  log={};weights=[];setLog={};
   try{
-    const a=localStorage.getItem('gains_log'),b=localStorage.getItem('gains_wt'),c=localStorage.getItem('gains_set');
+    const a=localStorage.getItem(personKey('log')),b=localStorage.getItem(personKey('wt')),c=localStorage.getItem(personKey('set'));
     if(a)log=JSON.parse(a);if(b)weights=JSON.parse(b);if(c)setLog=JSON.parse(c);
   }catch(e){}
-  programStart=localStorage.getItem('gains_start')||'';
-  if(!programStart){programStart=dateKey(mondayOfWeek(new Date()));localStorage.setItem('gains_start',programStart)}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(`${STORAGE_PREFIX}_people`);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed)&&parsed.length===2)people=parsed.map((p,i)=>({
+        id:p.id||DEFAULT_PEOPLE[i].id,
+        name:(p.name&&String(p.name).trim())||DEFAULT_PEOPLE[i].name,
+        startWt:Number(p.startWt)||DEFAULT_PEOPLE[i].startWt
+      }));
+    }
+  }catch(e){}
+  const savedIdx=parseInt(localStorage.getItem(`${STORAGE_PREFIX}_person`)||'0',10);
+  personIdx=savedIdx===1?1:0;
+  programStart=localStorage.getItem(`${STORAGE_PREFIX}_start`)||'';
+  if(!programStart){programStart=dateKey(mondayOfWeek(new Date()));localStorage.setItem(`${STORAGE_PREFIX}_start`,programStart)}
+  loadPersonData();
   const now=new Date();
   selDate=dateKey(now);
   calView={y:now.getFullYear(),m:now.getMonth()};
   syncPhaseFromDate();
+  renderPersonSwitch();
+}
+function switchPerson(i){
+  if(i===personIdx)return;
+  save();
+  personIdx=i;
+  loadPersonData();
+  savePeopleMeta();
+  renderPersonSwitch();
+  render();
+}
+function renderPersonSwitch(){
+  people.forEach((p,i)=>{
+    const btn=document.getElementById('personBtn'+i);
+    if(!btn)return;
+    btn.textContent=p.name;
+    btn.classList.toggle('active',i===personIdx);
+    btn.setAttribute('aria-selected',i===personIdx?'true':'false');
+  });
+  const n0=document.getElementById('name0'),n1=document.getElementById('name1');
+  const w0=document.getElementById('startWt0'),w1=document.getElementById('startWt1');
+  if(n0)n0.value=people[0].name;
+  if(n1)n1.value=people[1].name;
+  if(w0)w0.value=people[0].startWt;
+  if(w1)w1.value=people[1].startWt;
+}
+function savePersonMeta(){
+  const n0=(document.getElementById('name0').value||'').trim()||DEFAULT_PEOPLE[0].name;
+  const n1=(document.getElementById('name1').value||'').trim()||DEFAULT_PEOPLE[1].name;
+  const w0=parseFloat(document.getElementById('startWt0').value);
+  const w1=parseFloat(document.getElementById('startWt1').value);
+  people[0].name=n0.slice(0,20);
+  people[1].name=n1.slice(0,20);
+  if(w0>=50&&w0<=500)people[0].startWt=w0;
+  if(w1>=50&&w1<=500)people[1].startWt=w1;
+  savePeopleMeta();
+  renderPersonSwitch();
+  updateLostStat();
+  updateWeightTrend();
+}
+function updateDayFocus(){
+  const el=document.getElementById('dayFocus');
+  if(!el)return;
+  const focus=DAY_FOCUS[selDay];
+  if(focus)el.innerHTML=`Today’s focus · <strong>${focus}</strong>${selDay==='Sunday'||selDay==='Saturday'?' <span style="color:#666">(pick one weekend day)</span>':''}`;
+  else el.innerHTML=`Rest day · next up <strong>Mon · Wed · Weekend</strong>`;
 }
 
 /* ── Tabs ── */
@@ -650,7 +770,7 @@ function openWeightModal(){
   inp.focus();
 }
 function closeWeightModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('wtModal').classList.remove('open')}
-function openSettingsModal(){document.getElementById('settingsModal').classList.add('open')}
+function openSettingsModal(){renderPersonSwitch();document.getElementById('settingsModal').classList.add('open');refreshIcons(document.getElementById('settingsModal'))}
 function closeSettingsModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('settingsModal').classList.remove('open')}
 
 /* ── Calendar ── */
@@ -922,7 +1042,7 @@ function selectDate(dateStr){
 }
 function onStartChange(val){
   if(!val)return;
-  programStart=val;save();renderCalendar();render();
+  programStart=val;savePeopleMeta();save();renderCalendar();render();
 }
 function calMonthMeta(y,m){
   const first=new Date(y,m,1);
@@ -1187,7 +1307,7 @@ function updateLostStat(){
   const stat=document.getElementById('statLost');
   if(!stat)return;
   if(!weights.length){stat.textContent='0 lbs';return}
-  const l=(START_WT-weights[weights.length-1].w).toFixed(1);
+  const l=(startWt()-weights[weights.length-1].w).toFixed(1);
   stat.textContent=(l>=0?'–':'+')+(Math.abs(l))+' lbs'
 }
 
@@ -1213,8 +1333,8 @@ function setGoalRing(pct){
   fill.setAttribute('stroke-dasharray',`${dash} ${GOAL_RING_C}`);
 }
 function updateWeightTrend(){
-  const cur=weights.length?weights[weights.length-1].w:START_WT;
-  const lost=Math.max(0,(START_WT-cur).toFixed(1));
+  const cur=weights.length?weights[weights.length-1].w:startWt();
+  const lost=Math.max(0,(startWt()-cur).toFixed(1));
   const pct=Math.min(100,(lost/10*100));
   document.getElementById('progCurrent').textContent=cur+' lbs';
   document.getElementById('goalLost').textContent=lost;
@@ -1261,14 +1381,30 @@ function updateHeader(){
     document.getElementById('hPhase').textContent='—';
     document.getElementById('hWeek').textContent='—';
   }
+  updateDayFocus();
 }
 
 /* ── Main render ── */
 function render(){updateHeader();renderCalendar();renderExercises();updateLostStat();updateWeightTrend();refreshIcons()}
 
-/* ── Backup & Restore ── */
+/* ── Backup & Restore (both people) ── */
+function snapshotPerson(i){
+  const p=people[i];
+  const prefix=`${STORAGE_PREFIX}_${p.id}_`;
+  const read=(k,fb)=>{try{const v=localStorage.getItem(prefix+k);return v?JSON.parse(v):fb}catch(e){return fb}};
+  if(i===personIdx)return{id:p.id,name:p.name,startWt:p.startWt,log,weights,setLog};
+  return{id:p.id,name:p.name,startWt:p.startWt,log:read('log',{}),weights:read('wt',[]),setLog:read('set',{})};
+}
 function exportData(){
-  const backup=JSON.stringify({log,weights,setLog,programStart,exported:new Date().toLocaleString()});
+  save();
+  const backup=JSON.stringify({
+    version:2,
+    type:'couple',
+    people:people.map((_,i)=>snapshotPerson(i)),
+    programStart,
+    personIdx,
+    exported:new Date().toLocaleString()
+  });
   navigator.clipboard.writeText(backup).then(()=>{
     showMsg('Copied to clipboard — paste into Notes to save','#aaa','check-circle')
   }).catch(()=>{
@@ -1282,14 +1418,35 @@ function importData(){
   if(!raw){showMsg('Paste your backup text first','#888');return}
   try{
     const d=JSON.parse(raw);
+    if(d.type==='couple'&&Array.isArray(d.people)&&d.people.length){
+      d.people.slice(0,2).forEach((p,i)=>{
+        people[i]={
+          id:p.id||DEFAULT_PEOPLE[i].id,
+          name:(p.name&&String(p.name).trim())||DEFAULT_PEOPLE[i].name,
+          startWt:Number(p.startWt)||DEFAULT_PEOPLE[i].startWt
+        };
+        localStorage.setItem(`${STORAGE_PREFIX}_${people[i].id}_log`,JSON.stringify(p.log||{}));
+        localStorage.setItem(`${STORAGE_PREFIX}_${people[i].id}_wt`,JSON.stringify(p.weights||[]));
+        localStorage.setItem(`${STORAGE_PREFIX}_${people[i].id}_set`,JSON.stringify(p.setLog||{}));
+      });
+      if(d.programStart)programStart=d.programStart;
+      personIdx=d.personIdx===1?1:0;
+      savePeopleMeta();
+      loadPersonData();
+      renderPersonSwitch();
+      render();updateWeightTrend();
+      document.getElementById('importBox').value='';
+      showMsg('Data restored successfully','#aaa','check-circle');
+      return;
+    }
     if(!d.log&&!d.weights){showMsg('Invalid backup format','#e55');return}
     if(d.log)log=d.log;
     if(d.weights)weights=d.weights;
     if(d.setLog)setLog=d.setLog;
-    if(d.programStart){programStart=d.programStart;localStorage.setItem('gains_start',programStart)}
+    if(d.programStart){programStart=d.programStart;localStorage.setItem(`${STORAGE_PREFIX}_start`,programStart)}
     save();render();updateWeightTrend();
     document.getElementById('importBox').value='';
-    showMsg('Data restored successfully','#aaa','check-circle')
+    showMsg('Data restored for '+activePerson().name,'#aaa','check-circle')
   }catch(e){showMsg('Could not read backup — check it was copied fully','#e55')}
 }
 function showMsg(txt,color,icon){
