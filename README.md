@@ -9,7 +9,7 @@ A single-page fitness guide and workout tracker with phase-based plans, exercise
 
 ## Couple mode
 
-Open `couple.html` to track two people side by side. Switch between You and Partner (names editable in Settings). Workouts are Mon (Chest + Back), Wed (Arms), and weekend (Legs). Progress is stored separately per person in the browser.
+Open `couple.html` to track two people side by side. Switch between You and Partner (names editable in Settings). The plan **starts with Legs on your program start day** (defaults to today), then **Mon Legs · Wed Chest + Back · Weekend Arms**. Progress is stored separately per person in the browser.
 
 ## Usage
 
