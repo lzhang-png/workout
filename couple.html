@@ -343,10 +343,10 @@ const DEFAULT_PEOPLE = [
   {id:'partner', name:'Partner', startWt:140}
 ];
 const DAY_FOCUS = {
-  Monday:'Chest + Back',
-  Wednesday:'Arms',
-  Saturday:'Legs',
-  Sunday:'Legs'
+  Monday:'Legs',
+  Wednesday:'Chest + Back',
+  Saturday:'Arms',
+  Sunday:'Arms'
 };
 let people = DEFAULT_PEOPLE.map(p=>({...p}));
 let personIdx = 0;
@@ -593,84 +593,87 @@ const DEMOS = {
   }
 };
 
-/* Workout plan — Mon Chest+Back · Wed Arms · Weekend Legs */
+/* Workout plan — starts with Legs (Mon + kickoff Tue) · Wed Chest+Back · Weekend Arms */
 const REST=[{n:'Rest Day',s:1,r:'Full recovery'}];
+const LEGS_P1=[
+  {n:'Banded Squats',s:3,r:'12–15 reps'},
+  {n:'Banded Romanian Deadlifts',s:3,r:'10–12 reps'},
+  {n:'Banded Lateral Walks',s:3,r:'12 steps each way'},
+  {n:'Glute Bridges (single leg)',s:3,r:'8 reps each leg'},
+  {n:'Dead Bug',s:3,r:'10 reps each side'},
+  {n:'Plank (on handles)',s:3,r:'30–45 sec'}
+];
+const CHEST_BACK_P1=[
+  {n:'Push-Up (elevated)',s:3,r:'8–12 reps'},
+  {n:'Banded Chest Press',s:3,r:'12–15 reps'},
+  {n:'Banded Rows',s:3,r:'12–15 reps'},
+  {n:'Push-Up to Down-Dog',s:3,r:'8–10 reps'},
+  {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
+];
+const ARMS_P1=[
+  {n:'Banded Shoulder Press',s:3,r:'10–12 reps'},
+  {n:'Banded Lateral Raise',s:2,r:'12–15 reps'},
+  {n:'Tricep Dips',s:2,r:'8–10 reps'},
+  {n:'Banded Bicep Curls',s:3,r:'12–15 reps'},
+  {n:'Banded Face Pulls',s:3,r:'15 reps'}
+];
+const LEGS_P2=[
+  {n:'Banded Squats',s:5,r:'6–10 reps (heavy)'},
+  {n:'Banded Romanian Deadlifts',s:4,r:'8–10 reps'},
+  {n:'Banded Step-Ups',s:3,r:'10 reps each leg'},
+  {n:'Banded Hamstring Curls',s:3,r:'12–15 reps'},
+  {n:'Bulgarian Split Squats',s:3,r:'8–10 reps each leg'},
+  {n:'Single-Leg Glute Bridges',s:3,r:'10–12 reps each'},
+  {n:'Hollow Body Hold',s:3,r:'45–60 sec'}
+];
+const CHEST_BACK_P2=[
+  {n:'Push-Up (elevated)',s:5,r:'8–10 reps (weighted)'},
+  {n:'Banded Chest Press',s:4,r:'12–15 reps'},
+  {n:'Banded Rows',s:4,r:'10–12 reps (heavy)'},
+  {n:'Banded Lat Pulldowns',s:3,r:'12–15 reps'},
+  {n:'Banded Face Pulls',s:3,r:'20 reps'},
+  {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
+];
+const ARMS_P2=[
+  {n:'Banded Shoulder Press',s:4,r:'8–10 reps'},
+  {n:'Banded Lateral Raise',s:3,r:'12–15 reps'},
+  {n:'Tricep Dips',s:3,r:'12–15 reps (weighted)'},
+  {n:'Banded Bicep Curls',s:4,r:'10–15 reps'},
+  {n:'Overhead Tricep Extension',s:3,r:'12–15 reps'},
+  {n:'Banded Face Pulls',s:3,r:'15 reps'}
+];
 const PLAN = {
   1:{
-    Monday:[
-      {n:'Push-Up (elevated)',s:3,r:'8–12 reps'},
-      {n:'Banded Chest Press',s:3,r:'12–15 reps'},
-      {n:'Banded Rows',s:3,r:'12–15 reps'},
-      {n:'Push-Up to Down-Dog',s:3,r:'8–10 reps'},
-      {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
-    ],
+    Monday:LEGS_P1,
     Tuesday:REST,
-    Wednesday:[
-      {n:'Banded Shoulder Press',s:3,r:'10–12 reps'},
-      {n:'Banded Lateral Raise',s:2,r:'12–15 reps'},
-      {n:'Tricep Dips',s:2,r:'8–10 reps'},
-      {n:'Banded Bicep Curls',s:3,r:'12–15 reps'},
-      {n:'Banded Face Pulls',s:3,r:'15 reps'}
-    ],
+    Wednesday:CHEST_BACK_P1,
     Thursday:REST,
     Friday:REST,
-    Saturday:[
-      {n:'Banded Squats',s:3,r:'12–15 reps'},
-      {n:'Banded Romanian Deadlifts',s:3,r:'10–12 reps'},
-      {n:'Banded Lateral Walks',s:3,r:'12 steps each way'},
-      {n:'Glute Bridges (single leg)',s:3,r:'8 reps each leg'},
-      {n:'Dead Bug',s:3,r:'10 reps each side'},
-      {n:'Plank (on handles)',s:3,r:'30–45 sec'}
-    ],
-    Sunday:[
-      {n:'Banded Squats',s:3,r:'12–15 reps'},
-      {n:'Banded Romanian Deadlifts',s:3,r:'10–12 reps'},
-      {n:'Banded Lateral Walks',s:3,r:'12 steps each way'},
-      {n:'Glute Bridges (single leg)',s:3,r:'8 reps each leg'},
-      {n:'Dead Bug',s:3,r:'10 reps each side'},
-      {n:'Plank (on handles)',s:3,r:'30–45 sec'}
-    ]
+    Saturday:ARMS_P1,
+    Sunday:ARMS_P1
   },
   2:{
-    Monday:[
-      {n:'Push-Up (elevated)',s:5,r:'8–10 reps (weighted)'},
-      {n:'Banded Chest Press',s:4,r:'12–15 reps'},
-      {n:'Banded Rows',s:4,r:'10–12 reps (heavy)'},
-      {n:'Banded Lat Pulldowns',s:3,r:'12–15 reps'},
-      {n:'Banded Face Pulls',s:3,r:'20 reps'},
-      {n:'Banded Pull-Aparts',s:2,r:'15 reps'}
-    ],
+    Monday:LEGS_P2,
     Tuesday:REST,
-    Wednesday:[
-      {n:'Banded Shoulder Press',s:4,r:'8–10 reps'},
-      {n:'Banded Lateral Raise',s:3,r:'12–15 reps'},
-      {n:'Tricep Dips',s:3,r:'12–15 reps (weighted)'},
-      {n:'Banded Bicep Curls',s:4,r:'10–15 reps'},
-      {n:'Overhead Tricep Extension',s:3,r:'12–15 reps'},
-      {n:'Banded Face Pulls',s:3,r:'15 reps'}
-    ],
+    Wednesday:CHEST_BACK_P2,
     Thursday:REST,
     Friday:REST,
-    Saturday:[
-      {n:'Banded Squats',s:5,r:'6–10 reps (heavy)'},
-      {n:'Banded Romanian Deadlifts',s:4,r:'8–10 reps'},
-      {n:'Banded Step-Ups',s:3,r:'10 reps each leg'},
-      {n:'Banded Hamstring Curls',s:3,r:'12–15 reps'},
-      {n:'Bulgarian Split Squats',s:3,r:'8–10 reps each leg'},
-      {n:'Single-Leg Glute Bridges',s:3,r:'10–12 reps each'},
-      {n:'Hollow Body Hold',s:3,r:'45–60 sec'}
-    ],
-    Sunday:[
-      {n:'Banded Squats',s:5,r:'6–10 reps (heavy)'},
-      {n:'Banded Romanian Deadlifts',s:4,r:'8–10 reps'},
-      {n:'Banded Step-Ups',s:3,r:'10 reps each leg'},
-      {n:'Banded Hamstring Curls',s:3,r:'12–15 reps'},
-      {n:'Bulgarian Split Squats',s:3,r:'8–10 reps each leg'},
-      {n:'Single-Leg Glute Bridges',s:3,r:'10–12 reps each'},
-      {n:'Hollow Body Hold',s:3,r:'45–60 sec'}
-    ]
+    Saturday:ARMS_P2,
+    Sunday:ARMS_P2
   }
 };
+function legsForPhase(phaseNum){return phaseNum===2?LEGS_P2:LEGS_P1}
+function exercisesForDate(dateStr){
+  const pw=getPhaseWeek(programDayIndex(dateStr));
+  if(!pw)return[];
+  // Program kickoff day is always Legs so you can start today
+  if(dateStr===programStart)return legsForPhase(pw.phase);
+  return (PLAN[pw.phase]||{})[dayNameFor(dateStr)]||[];
+}
+function focusForDate(dateStr){
+  if(dateStr===programStart)return'Legs';
+  return DAY_FOCUS[dayNameFor(dateStr)]||null;
+}
 
 /* ── Storage (per person) ── */
 function personKey(suffix){return `${STORAGE_PREFIX}_${activePerson().id}_${suffix}`}
@@ -707,7 +710,7 @@ function load(){
   const savedIdx=parseInt(localStorage.getItem(`${STORAGE_PREFIX}_person`)||'0',10);
   personIdx=savedIdx===1?1:0;
   programStart=localStorage.getItem(`${STORAGE_PREFIX}_start`)||'';
-  if(!programStart){programStart=dateKey(mondayOfWeek(new Date()));localStorage.setItem(`${STORAGE_PREFIX}_start`,programStart)}
+  if(!programStart){programStart=dateKey(new Date());localStorage.setItem(`${STORAGE_PREFIX}_start`,programStart)}
   loadPersonData();
   const now=new Date();
   selDate=dateKey(now);
@@ -756,9 +759,10 @@ function savePersonMeta(){
 function updateDayFocus(){
   const el=document.getElementById('dayFocus');
   if(!el)return;
-  const focus=DAY_FOCUS[selDay];
-  if(focus)el.innerHTML=`Today’s focus · <strong>${focus}</strong>${selDay==='Sunday'||selDay==='Saturday'?' <span style="color:#666">(pick one weekend day)</span>':''}`;
-  else el.innerHTML=`Rest day · next up <strong>Mon · Wed · Weekend</strong>`;
+  const focus=focusForDate(selDate);
+  const kickoff=selDate===programStart&&!DAY_FOCUS[selDay];
+  if(focus)el.innerHTML=`Today’s focus · <strong>${focus}</strong>${kickoff?' <span style="color:#666">(starting today)</span>':(selDay==='Sunday'||selDay==='Saturday'?' <span style="color:#666">(pick one weekend day)</span>':'')}`;
+  else el.innerHTML=`Rest day · next up <strong>Mon Legs · Wed Chest+Back · Weekend Arms</strong>`;
 }
 
 /* ── Tabs ── */
@@ -784,7 +788,7 @@ function weightForDate(ds,map){return (map||getWeightMap())[ds]}
 function dayProgress(dateStr){
   const pw=getPhaseWeek(programDayIndex(dateStr));
   if(!pw)return null;
-  const exs=(PLAN[pw.phase]||{})[dayNameFor(dateStr)]||[];
+  const exs=exercisesForDate(dateStr);
   if(!exs.length)return null;
   const done=exs.filter((_,i)=>log[`${dateStr}_${i}`]).length;
   return{done,total:exs.length,pct:Math.round(done/exs.length*100)};
@@ -1187,7 +1191,7 @@ function renderExercises(){
     renderRecordWeightAction();
     return;
   }
-  const exs=(PLAN[pw.phase]||{})[selDay]||[];
+  const exs=exercisesForDate(selDate);
   if(!exs.length){listEl.innerHTML='<div class="empty">No workout today</div>';renderRecordWeightAction();return}
   listEl.innerHTML='';
   exs.forEach((ex,i)=>{
